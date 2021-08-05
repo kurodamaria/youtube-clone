@@ -1,11 +1,5 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import {
-  FaSearch,
-  FaYoutube,
-  FaBars,
-  FaUserCircle
-} from 'react-icons/fa'
 
 import {
   MdArrowBack,
@@ -23,82 +17,12 @@ import {
 import {
   IoMdApps, IoMdNotifications
 } from 'react-icons/io'
+
 import { useState } from 'react'
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.5rem;
-  padding: 0em 0.3em;
-  border: 1px solid black;
-  position: fixed;
-  top: 0;
-`
-
-const HeaderLeft = styled.div`
-  display: flex;
-  flex-grow: 0;
-`
-
-const HeaderCenter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  flex-grow: 1;
-  padding: 0.4em 0em;
-  max-width: 600px;
-  z-index: ${props => props.zIndex};
-`
-
-const HeaderRight = styled.div`
-  display: flex;
-  flex-grow: 0;
-`
-
-const IconWrapper = styled.a`
-  padding: 0.2em 0.3em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`
-
-const IconWrapperShowOnMaxWidth = styled(IconWrapper)`
-  display: none;
-  @media (max-width: ${props => props.mqMaxWidth}) {
-    display: flex;
-  }
-`
-
-const SearchInput = styled.input.attrs({ type: 'text' })`
-  width: 100%;
-  padding: 0.2em 1em;
-  font-size: 1rem;
-`
-
-const SearchButton = styled.button.attrs({ type: 'submit' })`
-  background-color: transparent;
-  border: 1px solid gray;
-  padding: 0.4em 1.5em;
-  cursor: pointer;
-`
-
-const Form = styled.form.attrs({ action: '/result' })`
-  @media (max-width: 656px) {
-    display: ${props => props.noMediaQuery ? 'flex' : 'none'};
-  }
-  display: flex;
-  flex-grow: 1;
-  margin-left: 1.5em;
-`
-
-const SearchBar = ({ noMediaQuery = true }) =>
-  <Form noMediaQuery={noMediaQuery}>
-    <SearchInput />
-    <SearchButton>
-      <FaSearch />
-    </SearchButton>
-  </Form>
+import {
+  Header
+} from '../components/header'
 
 const UploaderIcon = styled.div`
   background-image: url(${props => props.src});
@@ -203,70 +127,13 @@ function VideoCard () {
 }
 
 export default function Home () {
-  const [renderSeachBar, setRenderSearchBar] = useState(false)
-  if (renderSeachBar) {
-    return (
-      <>
-        <Header>
-          <IconWrapper>
-            <MdArrowBack onClick={
-                (e) => {
-                  e.preventDefault()
-                  setRenderSearchBar(false)
-                }
-              }
-            />
-          </IconWrapper>
-          <SearchBar />
-        </Header>
-      </>
-    )
-  }
   return (
     <div>
-      <Header>
-        <HeaderLeft>
-          <IconWrapper>
-            <FaBars />
-          </IconWrapper>
-          <IconWrapper>
-            <FaYoutube style={{ fontSize: '1.2em' }} />AnimeTube
-          </IconWrapper>
-        </HeaderLeft>
-        <HeaderCenter>
-          <SearchBar noMediaQuery={false} />
-          <IconWrapperShowOnMaxWidth mqMaxWidth='656px'>
-            <FaSearch onClick={
-                (e) => {
-                  e.preventDefault()
-                  setRenderSearchBar(true)
-                }
-              }
-            />
-          </IconWrapperShowOnMaxWidth>
-          <IconWrapper>
-            <MdKeyboardVoice />
-          </IconWrapper>
-        </HeaderCenter>
-        <HeaderRight>
-          <IconWrapper>
-            <RiVideoAddFill />
-          </IconWrapper>
-          <IconWrapper>
-            <IoMdApps />
-          </IconWrapper>
-          <IconWrapper>
-            <IoMdNotifications />
-          </IconWrapper>
-          <IconWrapper>
-            <FaUserCircle />
-          </IconWrapper>
-        </HeaderRight>
-      </Header>
+      <Header />
       <MainPageVideos>
         {
             [...Array(100)].map(() => <VideoCard />)
-          }
+        }
       </MainPageVideos>
     </div>
   )
