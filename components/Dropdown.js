@@ -1,46 +1,47 @@
 import { useCallback, useRef, useState } from 'react'
 import {
-  Container,
-  FlexContainer
+  DivContainer
 } from './Containers'
 
 import styled from 'styled-components'
-import { useClickOutside } from '../hooks/useClickOutside'
+import { useClickOutside, useDisplayControl, CssDisplayControl } from '../hooks'
 
-const DropdownContainer = styled(Container)`
+const DropdownContainer = styled(DivContainer)`
   position: relative;
 `
 
-const DropdownBody = styled(FlexContainer)`
+const DropdownBody = styled(DivContainer)`
   position: absolute;
-  display: ${props => props.show ? 'flex' : 'none'};
   background-color: white;
   ${
     // props.left means drawing the dropdown from right to left
     props => props.left ? 'right: 0%;' : 'left: 0%;'
   }
+  ${CssDisplayControl}
 `
 
 export function Dropdown ({ children, togger, left }) {
-  const [show, setShow] = useState(false)
+  const [hide, setHide] = useState(true)
   const ref = useRef()
   const handleClickOutside = useCallback(() => {
-    if (show) {
-      setShow(false)
+    if (!hide) {
+      setHide(true)
     }
-  }, [show])
+  }, [hide, setHide])
+
   useClickOutside(ref, handleClickOutside)
   return (
     <DropdownContainer ref={ref}>
-      <FlexContainer
+      <DivContainer
         onClick={() => {
-          setShow(!show)
+          setHide(!hide)
         }}
+        display='flex'
         alignItems='center'
       >
         {togger}
-      </FlexContainer>
-      <DropdownBody show={show} direction='column' left={left}>
+      </DivContainer>
+      <DropdownBody hide={hide} direction='column' left={left}>
         {children}
       </DropdownBody>
     </DropdownContainer>

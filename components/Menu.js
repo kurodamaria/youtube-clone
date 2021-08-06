@@ -5,26 +5,36 @@ import {
 } from './Button'
 
 import {
-  FlexContainer
-} from './containers'
+  DivContainer
+} from './Containers'
 
 export const MenuItem = styled(Button)`
-  justify-content: flex-start;
-  border: 0;
-  margin: 0.5em 0;
-  padding: 1em 2em;
-  animation: none;
   text-align: start;
+  padding: 1em 2em 1em 1em;
 `
 
-const MenuContainer = styled(FlexContainer)`
+export const MenuSection = styled(DivContainer)`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid red;
+  margin: 0.3em 0;
+  & + & {
+    margin-top: 0;
+  }
+`
+
+const MenuContainer = styled(DivContainer)`
+  display: flex;
   border: 1px solid black;
   flex-direction: column;
   justify-content: flex-start;
 `
 
 // children should be an array of MenuItem
-export const Menu = ({ children }) =>
-  <MenuContainer>
-    {children}
-  </MenuContainer>
+export const Menu = ({ children }) => {
+  return (
+    <MenuContainer>
+      {children}
+    </MenuContainer>
+  )
+}

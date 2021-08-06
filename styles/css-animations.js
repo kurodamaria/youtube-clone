@@ -10,6 +10,11 @@ export const CssAnimationFadeBorder = keyframes`
   }
 `
 
+export const CssModalTransition = css`
+  transition: opacity 0.2s,
+              visibility 0.2s;
+`
+
 // For play control a animation
 // onAnimationStart, onAnimationEnd
 // duration should be small, idk, fuck, i can't write this 🙄😰

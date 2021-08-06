@@ -1,7 +1,7 @@
 import { css } from 'styled-components'
 import {
   CssUsePlayAnimation
-} from './animations'
+} from './css-animations'
 
 /* Buttons */
 export const CssClickable = css`
@@ -19,6 +19,7 @@ export const CssClickable = css`
 export const CssButton = css`
   ${CssClickable}
   ${CssUsePlayAnimation}
+  display: flex;
   padding: 0.5em 1em;
   white-space: nowrap;
   border: 0;
@@ -26,7 +27,7 @@ export const CssButton = css`
 
 export const CssIconButton = css`
   ${CssButton}
-  display: flex; // correct align
+  align-items: center; // avoid stretch
   padding: 0.3em 0.3em;
   border-radius: 50%;
   font-size: inherit;

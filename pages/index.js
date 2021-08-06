@@ -1,28 +1,20 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
 import {
-  MdArrowBack,
-  MdKeyboardVoice,
   MdMoreVert,
-  MdPlaylistAdd,
   MdPlaylistPlay,
   MdWatchLater
 } from 'react-icons/md'
-
-import {
-  RiVideoAddFill
-} from 'react-icons/ri'
-
-import {
-  IoMdApps, IoMdNotifications
-} from 'react-icons/io'
 
 import { useState } from 'react'
 
 import {
   Header
-} from '../components/header'
+} from '../components/Header'
+import { CssAnimationFadeBorder, CssUsePlayAnimation } from '../styles/css-animations'
+import { usePlayAnimation } from '../hooks/usePlayAnimation'
+import { CssClickable } from '../styles/css-buttons'
+import { IconButton } from '../components/IconButton'
 
 const UploaderIcon = styled.div`
   background-image: url(${props => props.src});
@@ -49,19 +41,26 @@ const VideoTextInfoContainer = styled.div`
 `
 
 const VideoCardContainer = styled.div`
-  border: 1px solid black;
+  border-radius: 0.2em;
+  padding: 0.2em 0.2em;
   display: flex;
   flex-direction: column;
   position: relative;
   cursor: pointer;
-
+  ${CssUsePlayAnimation}
+  ${CssClickable}
+  &:hover {
+    background-color: ${props => props.theme.white};
+  }
+  &:active {
+     background-color: ${props => props.theme.white90};
+  } 
 `
 
 const VideoCardCoverImg = styled.img`
 `
 
 const MainPageVideos = styled.div`
-  border: 1px solid black;
   margin: 5em auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, 337px);
@@ -82,6 +81,7 @@ const Overlay = styled.div`
 
 function VideoCard () {
   const [hideOverlays, setHideOverlays] = useState(true)
+  const aniProps = usePlayAnimation('onClick')
   return (
     <VideoCardContainer
       onMouseOver={
@@ -94,17 +94,18 @@ function VideoCard () {
           setHideOverlays(true)
         }
       }
+      animationName={CssAnimationFadeBorder}
+      animationDuration='0.3s'
+      {...aniProps}
     >
-      <VideoCardCoverImg src='https://media.tenor.com/images/2a3065163177df2c7108b9c7a670502a/tenor.gif' />
+      <VideoCardCoverImg src='https://i.pinimg.com/736x/94/4d/fe/944dfe8fdc7ded8c94b629b1d5785730.jpg' />
       <VideoInfoContainer>
         <UploaderIcon src='https://i.pinimg.com/originals/3f/71/f3/3f71f31b66328d271e29a6ce09b84b3e.png' />
         <VideoTextInfoContainer>
           <div>WINDOWS 11 - Why I'm switching back to PC from Mac.</div>
           <div>Shirai Kuroko</div>
           <div>342K views·1 hour ago</div>
-          <Overlay right='0.2em' top='0.2em' hide={hideOverlays}>
-            <MdMoreVert />
-          </Overlay>
+          <IconButton Icon={MdMoreVert} onClick={() => { console.log('handle this shit') }} />
         </VideoTextInfoContainer>
       </VideoInfoContainer>
       <Overlay right='0.2em' top='0.2em' hide={hideOverlays}>
@@ -132,7 +133,7 @@ export default function Home () {
       <Header />
       <MainPageVideos>
         {
-            [...Array(100)].map(() => <VideoCard />)
+            [...Array(10)].map(() => <VideoCard />)
         }
       </MainPageVideos>
     </div>

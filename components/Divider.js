@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { FlexContainer } from './Containers'
+import { DivContainer } from './Containers'
 
 const TheDivider = styled.div`
   width: ${props => props.length};
@@ -10,8 +10,8 @@ const TheDivider = styled.div`
 // Note align uses justify-content
 export function HDivider ({ length, stroke, color, align, marginY }) {
   return (
-    <FlexContainer width='100%' justifyContent={align} margin={marginY + ' 0'}>
+    <DivContainer display='flex' width='100%' justifyContent={align} margin={marginY + ' 0'}>
       <TheDivider length={length} stroke={stroke} color={color} />
-    </FlexContainer>
+    </DivContainer>
   )
 }
