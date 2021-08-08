@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "commonjs",
+    "paths": {
+      "@Components": ["./src/components/"],
+      "@PCompo": ["./src/components/page_components"],
+      "@GCompo": ["./src/components/generic_components"],
+      "@Styles": ["./src/styles/"],
+      "@Helpers": ["./src/helpers"],
+      "@Hooks": ["./src/hooks"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

@@ -28,13 +28,13 @@ const GlobalStyle = createGlobalStyle`
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #888;
+    background: hsl(0, 0%, 60%);
     border-radius: 5px;
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: hsl(0, 0%, 80%);
   }
 `
 
