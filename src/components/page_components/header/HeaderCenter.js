@@ -48,9 +48,7 @@ const SearchForm = ({ hideOverride, showOverride, display, position, setHideSASB
     if (!showOverride && window.innerWidth <= 656 && document.activeElement === ref.current) {
       toggleLR()
       setHideSASB(true)
-      console.log('going to hide others')
     } else {
-      console.log('not going to hide others', !showOverride, window.innerWidth <= 656, document.activeElement === ref.current)
     }
   }, [showOverride, setHideSASB, toggleLR])
   useWindowResize(windowResizeHandler)
@@ -62,7 +60,7 @@ const SearchForm = ({ hideOverride, showOverride, display, position, setHideSASB
   }, [showOverride])
   return (
     <SearchFormContainer hide={hideOverride} show={showOverride} display={display} position={position}>
-      <TextInput ref={ref} onBlur={() => { console.log('blured ...!') }} />
+      <TextInput ref={ref} onBlur={() => { }} />
       <SearchButton />
     </SearchFormContainer>
   )

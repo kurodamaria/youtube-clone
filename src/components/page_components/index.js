@@ -1,2 +1,3 @@
 export * from './header'
-export * from './index-main'
+export * from './index_main'
+export * from './side_bar'
