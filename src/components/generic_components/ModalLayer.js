@@ -38,5 +38,10 @@ export const ModalLayer = styled(ModalLayerCore)`
   // enable to set background color
   background-color: ${props => props.backgroundColor};
   // hide is from ${CssDisplayControl}
-  opacity: ${props => props.hide ? '0' : props.opacity};
+  opacity: ${props => props.hide ? '0' : '0.2'};
+
+  background-color: black;
+
+  transition: opacity 0.3s,
+              visibility 0.3s;
 `

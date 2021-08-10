@@ -1,4 +1,6 @@
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import { GlobalContextProvider } from '@Context'
+import { Navi } from '@PCompo'
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -55,7 +57,10 @@ function MyApp ({ Component, pageProps }) {
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <GlobalContextProvider>
+          <Navi />
+          <Component {...pageProps} />
+        </GlobalContextProvider>
       </ThemeProvider>
     </>
   )

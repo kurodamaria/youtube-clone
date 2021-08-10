@@ -5,11 +5,18 @@ export const GlobalContext = createContext()
 export const HeaderContext = createContext()
 
 export const GlobalContextProvider = ({ children }) => {
-  const expandedDrawer = useCustomNamedState('hide', true)
-  const expandedDrawerModalLayer = useCustomNamedState('hide', true)
-  const miniDrawer = useCustomNamedState('hide') // undefined on purpose
+  // States are undefined on purpose,
+  // so that the initial behaviour of hide and show is
+  // controlled by css media queries
+  const expandedDrawer = {
+    ...useCustomNamedState('hide'),
+    ...useCustomNamedState('isShown'),
+    ...useCustomNamedState('disableMq'),
+    ...useCustomNamedState('hideModal')
+  }
+  const miniDrawer = useCustomNamedState('hide')
   return (
-    <GlobalContext.Provider value={{ expandedDrawer, expandedDrawerModalLayer, miniDrawer }}>
+    <GlobalContext.Provider value={{ expandedDrawer, miniDrawer }}>
       {children}
     </GlobalContext.Provider>
   )

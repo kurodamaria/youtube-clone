@@ -1,12 +1,9 @@
-import Link from 'next/link'
-import styled from 'styled-components'
 import { DivContainer, IconButton, LinkButton } from '@GCompo'
-
-import { MdMenu } from 'react-icons/md'
-
+import Link from 'next/link'
 import { FaYoutube } from 'react-icons/fa'
-import { useContext } from 'react'
-import { GlobalContext } from '@Context'
+import { MdMenu } from 'react-icons/md'
+import { useDrawerToggler } from 'src/hooks/useDrawerToggler'
+import styled from 'styled-components'
 
 const Container = styled(DivContainer)`
   display: flex;
@@ -26,18 +23,13 @@ const IconContainer = styled.div`
 `
 
 export const DrawerTogglerAndBrand = () => {
-  const globalContext = useContext(GlobalContext)
+  console.log('new rendering')
+  const togger = useDrawerToggler()
   return (
     <Container>
       <IconContainer>
         <Icon
-          onClick={
-          () => {
-            globalContext.expandedDrawer.setHide(
-              !globalContext.expandedDrawer.hide
-            )
-          }
-        }
+          onClick={togger}
         />
       </IconContainer>
       <Link href='/' passHref>

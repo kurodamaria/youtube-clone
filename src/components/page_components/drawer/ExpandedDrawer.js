@@ -1,9 +1,10 @@
 import { GlobalContext } from '@Context'
 import { DivContainer, ModalLayer } from '@GCompo'
-import { useMediaQuery } from '@Hooks'
+import { useMediaQueryT } from '@Hooks'
 import { DrawerTogglerAndBrand } from '@PCompo'
-import { useContext, useEffect, useState } from 'react'
-import { CssHeaderText } from 'src/styles'
+import { useCallback, useContext, useEffect } from 'react'
+import { useDrawerToggler } from 'src/hooks/useDrawerToggler'
+import { CssDisplayControl, CssHeaderText } from 'src/styles'
 import styled, { css } from 'styled-components'
 
 const Container = styled.div`
@@ -15,72 +16,81 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  background-color: yellow;
+  background-color: ${props => props.theme.white};
   z-index: 2;
-  transition: transform 0.3s;
-  ${props => props.hide ? css`transform: translateX(-240px);` : css`transform: translateX(240px);`}
-  @media(min-width: 1313px) {
-    visibility: ${props => props.hide ? '' : 'hidden'};
+  transition: transform 0.2s,
+              visibility 0s 0.2s;
+  ${props => !props.hide ? css`transform: translateX(240px);` : css`transform: translateX(-240px);`}
+  visibility: hidden;
+  @media(min-width: 1329px) {
+    visibility: visible;
+    transition: none;
   }
+  ${CssDisplayControl}
 `
 
 const HeadContainer = styled(DivContainer)`
   ${CssHeaderText}
 `
-// I won't implement the following shit because it's shit
-// >= 1313px
-// disable ModalLayer -> hide and not shouldDisable
-// if Drawer is showing, *DISABLE* it -> !hide ? override the hide state
-//
-// >= 1329px
-// Show Drawer if not *DISABLED* -> disabled ? setHide(false)
-//
-// <= 1312px
-// if Drawer is showing, hide it -> !hide ? setHide(true)
-//
-// Instead
-// >= 1313px
-// disable ModalLayer
-// if Drawer is showing, hide it
-//
-// >= 1329px
-// show Drawer
-//
-// <= 1312px
-// hide Drawer
+
+export function useHideModal () {
+  const { expandedDrawer } = useContext(GlobalContext)
+  // Modal is not reacting to the viewport width,
+  // but is reacting to the drawer's hide property
+  // so media query is not suitable
+  useEffect(() => {
+    // >= 1329 always hide modal
+    // Drawer     Modal
+    // true       true
+    // false      true
+    // undefined  true
+    if (window.innerWidth >= 1329) {
+      expandedDrawer.setHideModal(true)
+    } else {
+      // < 1329 hide when the drawer is hide
+      // Drawer     Modal
+      // true       true
+      // false      false
+      // undefined  true
+      if (expandedDrawer.hide || expandedDrawer.hide === undefined) {
+        expandedDrawer.setHideModal(true)
+      } else {
+        expandedDrawer.setHideModal(false)
+      }
+    }
+  }, [expandedDrawer])
+}
+
+function useExpandedDrawerMq () {
+  const { expandedDrawer } = useContext(GlobalContext)
+  const mqCb = useCallback(() => {
+    if (expandedDrawer.hide === false) {
+      console.log('> reached 1329px while showing the drawer')
+      if (expandedDrawer.disableMq) {
+        console.log('> disableMq flag, hide through setHide(true)')
+        expandedDrawer.setHide(true)
+      } else {
+        console.log('> pass control to media query')
+        expandedDrawer.setHide(undefined)
+      }
+    }
+  }, [expandedDrawer])
+  useMediaQueryT('(min-width: 1329px)', mqCb)
+}
 
 const ExpandedDrawerCore = ({ className, style }) => {
-  const globalContext = useContext(GlobalContext)
-  const [shouldDisable, setShouldDisable] = useState(true)
-  useMediaQuery('(min-width: 1313px)', (mql) => {
-    // disable interaction only when viewport width is less than 1313px
-    setShouldDisable(!mql.matches && !globalContext.expandedDrawerModalLayer.hide)
-  })
-
-  // sync the hide state
-  useEffect(() => {
-    globalContext.expandedDrawerModalLayer.setHide(
-      globalContext.expandedDrawer.hide
-    )
-  }, [globalContext.expandedDrawer.hide, globalContext.expandedDrawerModalLayer])
-
+  const { expandedDrawer } = useContext(GlobalContext)
+  const togger = useDrawerToggler()
+  useExpandedDrawerMq()
+  useHideModal()
   return (
     <div className={className} style={style}>
-      <Container hide={globalContext.expandedDrawer.hide}>
+      <Container hide={expandedDrawer.hide}>
         <HeadContainer>
           <DrawerTogglerAndBrand />
         </HeadContainer>
       </Container>
-      <ModalLayer
-        backgroundColor='black'
-        zIndex='1'
-        opacity='0.5'
-        onClick={() => {
-          globalContext.expandedDrawer.setHide(true)
-        }}
-        hide={globalContext.expandedDrawerModalLayer.hide}
-        shouldDisable={shouldDisable}
-      />
+      <ModalLayer hide={expandedDrawer.hideModal} onClick={togger} />
     </div>
   )
 }
@@ -88,10 +98,7 @@ const ExpandedDrawerCore = ({ className, style }) => {
 const ExpandedDrawer = styled(ExpandedDrawerCore)`
   // disable the layer
   ${ModalLayer} {
-    @media(min-width: 1329px) {
-      transition: none;
-      visibility: hidden !important;
-    }
+    z-index: 1;
   }
 `
 export { ExpandedDrawer }

@@ -3,7 +3,7 @@ import { usePlayAnimation } from '@Hooks'
 import { CssAnimationFadeBorder, CssClickable, CssDisplayControl } from '@Styles'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { MdExplore, MdHome, MdSubscriptions, MdVideoLibrary } from 'react-icons/md'
 import styled, { css } from 'styled-components'
 
@@ -13,12 +13,12 @@ const MiniDrawerContainer = styled.div`
   left: 0;
   bottom: 0;
   width: var(--mini-drawer-width);
+  display: flex;
+  flex-direction: column;
   @media(max-width: 807px) {
     visibility: hidden;
   }
   ${CssDisplayControl}
-  display: flex;
-  flex-direction: column;
 `
 
 const Tower = styled.a`
@@ -70,13 +70,29 @@ const MiniNavi = ({ href, icon, text }) => {
   )
 }
 
-export const MiniDrawer = () => {
-  const globalContext = useContext(GlobalContext)
-  return (
-    <MiniDrawerContainer hide={
-      globalContext.expandedDrawer.hide ? undefined : true
+function useHideMiniDrawer () {
+  const { expandedDrawer, miniDrawer } = useContext(GlobalContext)
+  useEffect(() => {
+    // only >= 1329px
+    // ExpandedDrawer    MiniDrawer
+    // true              undefined
+    // false             true
+    // undefined         undefined
+    if (window.innerWidth >= 1329) {
+      if (expandedDrawer.hide === false) {
+        miniDrawer.setHide(true)
+      } else {
+        miniDrawer.setHide(undefined)
+      }
     }
-    >
+  }, [expandedDrawer, miniDrawer])
+}
+
+export const MiniDrawer = () => {
+  useHideMiniDrawer()
+  const { miniDrawer } = useContext(GlobalContext)
+  return (
+    <MiniDrawerContainer hide={miniDrawer.hide}>
       <MiniNavi
         icon={<MdHome />}
         text='Home'

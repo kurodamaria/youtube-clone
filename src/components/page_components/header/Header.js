@@ -19,6 +19,8 @@ const HeaderContainer = styled(DisplayControlledDiv)`
   justify-content: space-between;
 
   z-index: 1;
+
+  background-color: ${props => props.theme.white};
 `
 
 export function Header () {
