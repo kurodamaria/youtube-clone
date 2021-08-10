@@ -1,3 +1,4 @@
 export * from './header'
-export * from './index_main'
 export * from './drawer'
+export * from './content_container'
+export * from './nav'

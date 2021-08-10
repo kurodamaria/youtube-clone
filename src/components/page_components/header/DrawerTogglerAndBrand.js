@@ -2,7 +2,7 @@ import Link from 'next/link'
 import styled from 'styled-components'
 import { DivContainer, IconButton, LinkButton } from '@GCompo'
 
-import { MdDehaze } from 'react-icons/md'
+import { MdMenu } from 'react-icons/md'
 
 import { FaYoutube } from 'react-icons/fa'
 import { useContext } from 'react'
@@ -14,7 +14,7 @@ const Container = styled(DivContainer)`
   height: var(--masthead-height);
 `
 
-const Icon = styled(IconButton).attrs({ Icon: MdDehaze })`
+const Icon = styled(IconButton).attrs({ Icon: MdMenu })`
 `
 
 const IconContainer = styled.div`

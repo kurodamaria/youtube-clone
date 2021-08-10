@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 
 export function useMediaQuery (query, cb) {
   useEffect(() => {
@@ -9,4 +9,14 @@ export function useMediaQuery (query, cb) {
       mql.removeEventListener('change', cb)
     }
   }, [query, cb])
+}
+
+export function useMediaQueryT (query, cb) {
+  const tCb = useCallback((mql) => {
+    if (mql.matches) {
+      cb()
+    }
+  }, [cb])
+
+  useMediaQuery(query, tCb)
 }

@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { useRef } from 'react/cjs/react.development'
+import { useEffect, useRef } from 'react'
 
 export function useResizeObserver (cb) {
   const ref = useRef()

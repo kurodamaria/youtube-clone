@@ -2,12 +2,9 @@
 // and disables interactions below the layer
 // An element is below the layer if it's z-index is smaller than the layer's
 
-import styled from 'styled-components'
-
+import { useDisableDocumentScroll } from '@Hooks'
 import { CssDisplayControl, CssFixed, CssModalTransition } from '@Styles'
-import { useDisableDocumentScroll, useResizeObserver } from '@Hooks'
-import { useState } from 'react'
-import { useEffect, useRef } from 'react/cjs/react.development'
+import styled from 'styled-components'
 
 // className and style are here to allow styled to work with this component
 // *Core has functionality and unstyled elements

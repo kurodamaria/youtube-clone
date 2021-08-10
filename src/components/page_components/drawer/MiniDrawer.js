@@ -1,10 +1,11 @@
 import { GlobalContext } from '@Context'
-import { Button } from '@GCompo'
+import { usePlayAnimation } from '@Hooks'
+import { CssAnimationFadeBorder, CssClickable, CssDisplayControl } from '@Styles'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 import { useContext } from 'react'
 import { MdExplore, MdHome, MdSubscriptions, MdVideoLibrary } from 'react-icons/md'
-import { CssClickable, CssDisplayControl } from 'src/styles'
-import styled from 'styled-components'
-import Link from 'next/link'
+import styled, { css } from 'styled-components'
 
 const MiniDrawerContainer = styled.div`
   position: fixed;
@@ -26,6 +27,20 @@ const Tower = styled.a`
   align-items: center;
   padding: 1em 0em;
   ${CssClickable}
+  ${
+    props => props.playAnimation ? css`animation-name: ${CssAnimationFadeBorder};` : ''
+  }
+  animation-duration: 0.3s;
+  &:link {
+    color: hsl(0, 0%, 40%);
+  }
+  &:visited {
+    color: ${props => props.current ? 'red' : 'hsl(0, 0%, 40%)'};
+  }
+  &:hover {
+  }
+  &:active {
+  }
 `
 
 const Text = styled.div`
@@ -35,16 +50,19 @@ const Text = styled.div`
 const Icon = styled.div`
   font-size: ${props => props.size};
   display: flex;
+  margin-bottom: 0.3em;
 `
 
 const MiniNavi = ({ href, icon, text }) => {
+  const aniProps = usePlayAnimation('onClick')
+  const router = useRouter()
   return (
     <Link href={href} passHref>
-      <Tower>
-        <Icon size='2rem'>
+      <Tower {...aniProps} current={href === router.pathname}>
+        <Icon size='1.5rem'>
           {icon}
         </Icon>
-        <Text fontSize='0.8rem'>
+        <Text fontSize='0.65rem'>
           {text}
         </Text>
       </Tower>
@@ -65,19 +83,19 @@ export const MiniDrawer = () => {
         href='/'
       />
       <MiniNavi
-        icon={<MdHome />}
-        text='Home'
-        href='/'
+        icon={<MdExplore />}
+        text='Explore'
+        href='/explore'
       />
       <MiniNavi
-        icon={<MdHome />}
-        text='Home'
-        href='/'
+        icon={<MdSubscriptions />}
+        text='Subscriptions'
+        href='/subscriptions'
       />
       <MiniNavi
-        icon={<MdHome />}
-        text='Home'
-        href='/'
+        icon={<MdVideoLibrary />}
+        text='Library'
+        href='/library'
       />
     </MiniDrawerContainer>
   )

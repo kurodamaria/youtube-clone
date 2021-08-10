@@ -1,11 +1,10 @@
-import styled, { css } from 'styled-components'
-import { DisplayControlledDiv, DivContainer, Modal, ModalLayer } from '@GCompo'
-import { DrawerTogglerAndBrand } from '@PCompo'
-import { CssHeaderText } from 'src/styles'
-import { useContext, useState } from 'react'
-import { useMediaQuery } from '@Hooks'
 import { GlobalContext } from '@Context'
-import { useEffect } from 'react/cjs/react.development'
+import { DivContainer, ModalLayer } from '@GCompo'
+import { useMediaQuery } from '@Hooks'
+import { DrawerTogglerAndBrand } from '@PCompo'
+import { useContext, useEffect, useState } from 'react'
+import { CssHeaderText } from 'src/styles'
+import styled, { css } from 'styled-components'
 
 const Container = styled.div`
   position: fixed;

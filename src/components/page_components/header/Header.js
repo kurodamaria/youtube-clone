@@ -1,14 +1,13 @@
-import styled from 'styled-components'
-
-import { CssFixed, CssHeaderText } from '@Styles'
-import { HeaderLeft } from './HeaderLeft'
-import { HeaderCenter } from './HeaderCenter'
-import { HeaderRight } from './HeaderRight'
+import { HeaderContextProvider } from '@Context'
 import { DisplayControlledDiv } from '@GCompo'
-import { useCustomNamedState } from 'src/hooks/useCustomNamedState'
-import { HeaderContext } from '@Context'
-import { useRef } from 'react/cjs/react.development'
 import { useClickOutside } from '@Hooks'
+import { CssFixed, CssHeaderText } from '@Styles'
+import { useRef } from 'react'
+import styled from 'styled-components'
+import { HeaderCenter } from './HeaderCenter'
+import { HeaderLeft } from './HeaderLeft'
+import { HeaderRight } from './HeaderRight'
+
 const HeaderContainer = styled(DisplayControlledDiv)`
   ${CssFixed}
   ${CssHeaderText}
@@ -23,19 +22,17 @@ const HeaderContainer = styled(DisplayControlledDiv)`
 `
 
 export function Header () {
-  const headerLeft = useCustomNamedState('hide', false)
-  const headerRight = useCustomNamedState('hide', false)
   const ref = useRef()
   useClickOutside(() => {
     console.log(ref.current)
   })
   return (
     <HeaderContainer ref={ref}>
-      <HeaderContext.Provider value={{ headerLeft, headerRight }}>
+      <HeaderContextProvider>
         <HeaderLeft />
         <HeaderCenter />
         <HeaderRight />
-      </HeaderContext.Provider>
+      </HeaderContextProvider>
     </HeaderContainer>
   )
 }

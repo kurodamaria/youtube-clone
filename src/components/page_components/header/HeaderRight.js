@@ -2,10 +2,13 @@
 import {
   MdVideoCall,
   MdApps,
-  FaYoutube,
   MdNotifications,
   MdAccountCircle
 } from 'react-icons/md'
+
+import {
+  FaYoutube
+} from 'react-icons/fa'
 
 import styled from 'styled-components'
 
