@@ -9,20 +9,21 @@ import {
 
 import styled from 'styled-components'
 
-import { Dropdown, Menu, MenuSection, MenuItem, IconButton, DivContainer } from '@Components'
-import { CssDisplayControl } from '@Styles'
+import { Dropdown, Menu, MenuSection, MenuItem, IconButton, DisplayControlledDiv } from '@GCompo'
+import { useContext } from 'react'
+import { HeaderContext } from '@Context'
 
-const HeaderRightContainer = styled(DivContainer)`
+const HeaderRightContainer = styled(DisplayControlledDiv)`
   display: flex;
   margin: 0 0.2em;
   align-items: center;
-  ${CssDisplayControl}
 `
 
-export const HeaderRight = ({ hideOverride }) => {
+export const HeaderRight = () => {
+  const headerContext = useContext(HeaderContext)
   return (
-    <HeaderRightContainer hide={hideOverride}>
-      <Dropdown togger={<IconButton Icon={MdVideoCall} />}>
+    <HeaderRightContainer hide={headerContext.headerRight.hide}>
+      <Dropdown togger={<IconButton Icon={MdVideoCall} playAnimation />}>
         <Menu>
           <MenuItem label='Upload video' />
           <MenuItem label='Go live' />

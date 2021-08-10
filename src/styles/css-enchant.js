@@ -2,11 +2,11 @@ import { css } from 'styled-components'
 
 export const CssFixed = css`
   position: fixed;
-  left: ${props => props.left};
-  right: ${props => props.right};
-  top: ${props => props.top};
-  bottom: ${props => props.bottom};
-  z-index: ${props => props.zIndex};
+  left: ${props => props.left || 0};
+  right: ${props => props.right || 0};
+  top: ${props => props.top || 0};
+  bottom: ${props => props.bottom || 0};
+  z-index: ${props => props.zIndex || 0};
 `
 
 export const CssChildrenMargin = css`

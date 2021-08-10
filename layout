@@ -1,0 +1,50 @@
+Components From Top Down
+
+HomePage
+Content
+  Masthead
+    Start
+      DrawerToggler
+      YoutubeIcon
+    Center
+      BackButton // hide by default
+      SearchForm
+      SearchButton
+      VoiceSearch
+    End
+      FourIcons
+  Drawer
+    GuideSpacer
+      DrawerToggler
+      YoutubeIcon
+    GuideContent
+      Bunch of routes
+  MiniDrawer
+    DrawerToggler
+    Bunch of routes
+  PageManager
+    Head
+      Filter
+    Contents
+      VideoCards
+
+Positions
+  Masthead: fixed w100% h56px
+  Drawer: fixed w240px
+  PageManager: takes the rest of the Content, infinite height
+  MiniDrawer: fixed 
+
+Responsive
+  Masthead: width shrinks with the viewport
+    Center
+      SearchForm: hide when the viewport's width is less than a certain number
+      SearchButton: show when the viewport's width is less than a certain number
+  Drawer: show when the viewport's width is greater than a certain number
+  MiniDrawer: show when the viewport's width is in a certain range
+  PageManager: takes whatever space remains, by remains I mean ISUALLY VISIBLE space on the page
+
+Interactions
+  Press DrawerTogger  ->  Drawer Hidden?  ->  Drawer Show     ->  MiniDrawer Showing?
+                      ->  Drawer Showing? ->  Drawer Hidden 
+  Press SearchButton  ->  BackButton Show, SearchForm Show, SearchButton Hide, Start and End Hide, Center Takes the entire Masthead space
+  Press 

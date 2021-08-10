@@ -1,123 +1,130 @@
+import { DivContainer, IconButton } from '@GCompo'
+import { HeaderContext } from '@Context'
+import { useContext, useEffect, useRef } from 'react'
+import { MdArrowBack, MdKeyboardVoice, MdSearch } from 'react-icons/md'
 import styled from 'styled-components'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { MdSearch, MdKeyboardVoice, MdArrowBack } from 'react-icons/md'
+import { CssDisplayControl } from 'src/styles'
+import { useClickOutside, useMediaQuery } from '@Hooks'
 
-import { IconButton, DivContainer } from '@Components'
-import { useClickOutside, useWindowResize } from '@Hooks'
-import { callF } from '@Helpers'
-import { CssDisplayControl } from '@Styles'
-
-/* HeaderCenter */
 const TextInput = styled.input.attrs({ type: 'text', placeholder: 'Search' })`
-  flex-grow: 1;
-  padding: 0.3em 0.5em;
-  font-size: 1rem;
-  outline: none;
-  border: 1px solid transparent; // placeholder...
-  &:focus {
-    border: 1px solid ${props => props.theme.blue};
-  }
-`
-
-const SearchFormContainer = styled.form`
-  visibility: hidden;
-  position: fixed;
-  display: flex;
   width: 100%;
-  border: 1px solid ${props => props.theme.gray};
-  border-radius: 0.1em;
-  @media (min-width: 656px) {
-    visibility: visible;
-    position: static;
+  outline: none;
+  border: 0;
+  font-size: 1.12rem;
+  padding: 0.1em 1em;
+  &:focus {
+    outline: 1px solid ${props => props.theme.blue};
   }
-  ${CssDisplayControl}
 `
-
 const SearchButton = styled(IconButton).attrs({ Icon: MdSearch })`
   border-radius: 0;
-  padding: 0.1em 0.8em;
-  background-color: ${props => props.theme.white95};
-  border-left: 1px solid ${props => props.theme.gray};
-  &:hover {
-
-  }
+  // props.playAnimation just doesn't matter now
+  // because this class has more specifity (source order specifity) than the previous
+  // so the property will be override to none no matter what happened
+  animation-name: none;
 `
 
-const SearchForm = ({ hideOverride, showOverride, display, position, setHideSASB, toggleLR }) => {
-  const windowResizeHandler = useCallback(() => {
-    if (!showOverride && window.innerWidth <= 656 && document.activeElement === ref.current) {
-      toggleLR()
-      setHideSASB(true)
-    } else {
-    }
-  }, [showOverride, setHideSASB, toggleLR])
-  useWindowResize(windowResizeHandler)
+const SearchFormCore = ({ className, style, inputFocused }) => {
+  const headerContext = useContext(HeaderContext)
   const ref = useRef()
+  useMediaQuery('(max-width: 656px)', (mql) => {
+    // if the max width of the viewport is 656px and the input is focused
+    // we switch to mini search header immediately
+    if (mql.matches && document.activeElement === ref.current) {
+      headerContext.headerLeft.setHide(true)
+      headerContext.headerRight.setHide(true)
+    }
+  })
+
   useEffect(() => {
-    if (showOverride) {
+    if (inputFocused) {
       ref.current.focus()
     }
-  }, [showOverride])
+  }, [inputFocused, ref])
   return (
-    <SearchFormContainer hide={hideOverride} show={showOverride} display={display} position={position}>
-      <TextInput ref={ref} onBlur={() => { }} />
+    <form className={className} style={style}>
+      <TextInput ref={ref} />
       <SearchButton />
-    </SearchFormContainer>
+    </form>
   )
 }
+
+const SearchForm = styled(SearchFormCore)`
+  display: flex;
+  flex-grow: 1;
+  border: 1px solid ${props => props.theme.white90};
+  ${CssDisplayControl}
+`
 
 const SASearchButton = styled(IconButton).attrs({ Icon: MdSearch })`
-  @media (min-width: 656px) {
-    display: none;
-  }
   ${CssDisplayControl}
-`
-const BackButton = styled(IconButton).attrs({ Icon: MdArrowBack })`
-  animation: none;
 `
 
-const HeaderCenterContainer = styled(DivContainer)`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  max-width: 656px;
-  flex-grow: 1;
+const BackButton = styled(IconButton).attrs({ Icon: MdArrowBack })`
+  animation: none;
   ${CssDisplayControl}
 `
-const HeaderCenter = ({ hideOverride, toggleLR }) => {
-  // When SASearchButton is clicked
-  // Hide HeaderLeft, HeaderRight and render ac
-  const [hideSASB, setHideSASB] = useState(false)
-  const searchFormHideProps = hideSASB ? { showOverride: true, display: 'flex', position: 'static' } : {}
-  const windowResizeHandler = useCallback(() => {
-    if (hideSASB && window.innerWidth >= 656) {
-      callF(toggleLR)
-      setHideSASB(false)
+
+const HeaderCenterCore = ({ className, style }) => {
+  const headerContext = useContext(HeaderContext)
+  useMediaQuery('(min-width: 657px)', (mql) => {
+    if (mql.matches) {
+      headerContext.headerLeft.setHide(false)
+      headerContext.headerRight.setHide(false)
     }
-  }, [hideSASB, toggleLR])
-  useWindowResize(windowResizeHandler)
+  })
   const ref = useRef()
-  const clickOutsideHandler = useCallback(() => {
-    if (hideSASB) {
-      callF(toggleLR)
-      setHideSASB(false)
+  useClickOutside(ref, () => {
+    // When use clicked outside the HeaderCenterContainer,
+    // and the minified search heading is showing
+    // dismiss the search
+    if (headerContext.headerLeft.hide) {
+      headerContext.headerLeft.setHide(false)
+      headerContext.headerRight.setHide(false)
     }
-  }, [hideSASB, toggleLR])
-  useClickOutside(ref, clickOutsideHandler)
+  })
   return (
-    <HeaderCenterContainer ref={ref}>
-      {hideSASB ? <BackButton onClick={() => { callF(toggleLR); setHideSASB(false) }} /> : null}
-      <SearchForm {...searchFormHideProps} setHideSASB={setHideSASB} toggleLR={toggleLR} />
+    <DivContainer ref={ref} className={className} style={style}>
+      <BackButton
+        onClick={
+          () => {
+            headerContext.headerLeft.setHide(false)
+            headerContext.headerRight.setHide(false)
+          }
+        }
+        hide={!headerContext.headerLeft.hide}
+      />
+      <SearchForm position='relative' hide={headerContext.headerLeft.hide ? false : undefined} inputFocused={headerContext.headerLeft.hide} />
       <SASearchButton
-        onClick={(ev) => {
-          callF(toggleLR)
-          setHideSASB(true)
-        }}
-        hide={hideSASB}
+        onClick={
+          () => {
+            headerContext.headerLeft.setHide(true)
+            headerContext.headerRight.setHide(true)
+          }
+        }
+        hide={headerContext.headerLeft.hide ? true : undefined}
       />
       <IconButton Icon={MdKeyboardVoice} />
-    </HeaderCenterContainer>
+    </DivContainer>
   )
 }
 
-export { HeaderCenter }
+export const HeaderCenter = styled(HeaderCenterCore)`
+  max-width: var(--masthead-center-max-width);
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+  align-items: center;
+  ${SASearchButton} {
+    @media(min-width: 657px) {
+      visibility: hidden;
+      position: fixed;
+    }
+  }
+  ${SearchForm} {
+    @media(max-width: 656px) {
+      visibility: hidden;
+      position: fixed;
+    }
+  }
+`

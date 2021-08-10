@@ -10,7 +10,8 @@ module.exports = {
       '@Helpers': path.resolve(__dirname, './src/helpers'),
       '@Styles': path.resolve(__dirname, './src/styles'),
       '@PCompo': path.resolve(__dirname, './src/components/page_components'),
-      '@GCompo': path.resolve(__dirname, './src/components/generic_components')
+      '@GCompo': path.resolve(__dirname, './src/components/generic_components'),
+      '@Context': path.resolve(__dirname, './src/context')
     }
     return config
   }

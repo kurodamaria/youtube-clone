@@ -1,0 +1,11 @@
+@media(max-width: 656px) {
+	ytd-masthead[show-input] #guide-button.ytd-masthead,
+	ytd-masthead[show-input] #search-button-narrow.ytd-masthead,
+	ytd-masthead[show-input] #logo.ytd-masthead,
+	ytd-masthead[show-input] #end.ytd-masthead {
+	    display: none;
+	}
+}
+
+
+

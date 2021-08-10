@@ -14,6 +14,7 @@ export function usePlayAnimation (synEvName, synEvHandler, onAnimationEndHandler
       setPlay(false)
       callF(onAnimationEndHandler, ...args)
     },
+    // the animation is enabled in css
     playAnimation: play
   }), [onAnimationEndHandler, play, synEvHandler, synEvName])
   return aniProps

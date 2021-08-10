@@ -28,7 +28,7 @@ export const CssIconButton = css`
   ${CssButton}
   align-items: center; // avoid stretch
   padding: 0.3em 0.3em;
-  border-radius: 50%;
+  border-radius: 50%; // I can't override this for some reaason
   font-size: inherit;
   background-color: transparent;
   &:hover {

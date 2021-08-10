@@ -4,13 +4,14 @@ import { CssButton } from '@Styles'
 
 const ButtonCore = styled.button`
   ${CssButton}
-  align-items: center;
 `
 
-const IconContainer = styled.span`
+const IconContainer = styled.div`
   font-size: 1.5em;
   margin-right: 0.5em;
   display: flex;
+  justify-content: center;
+  width: 100%;
 `
 
 export const Button = ({ label, Icon, className, style }) => {

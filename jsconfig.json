@@ -8,7 +8,8 @@
       "@GCompo": ["./src/components/generic_components"],
       "@Styles": ["./src/styles/"],
       "@Helpers": ["./src/helpers"],
-      "@Hooks": ["./src/hooks"]
+      "@Hooks": ["./src/hooks"],
+      "@Context": ["./src/context"]
     }
   },
   "exclude": ["node_modules", "dist"]
