@@ -8,7 +8,7 @@
 | white70 | hsl(0, 0%, 70%)     | <span style="width: 1em; height: 1em; background-color: hsl(0, 0%, 70%)">    </span> |
 | red     | hsl(0, 100%, 50%)   | <span style="width: 1em; height: 1em; background-color: hsl(0, 100%, 50%)">    </span> |
 | black   | hsl(0, 0%, 0%)      | <span style="width: 1em; height: 1em; background-color: hsl(0, 0%, 0%)">    </span> |
-| blue    | hsl(200, 100%, 60%) | <span style="width: 1em; height: 1em; background-color: hsl(200, 100%, 60%)">    </span> |
+| blue    | hsl(220, 100%, 50%) | <span style="width: 1em; height: 1em; background-color: hsl(220, 100%, 50%)">    </span> |
 
 # Styles
 
