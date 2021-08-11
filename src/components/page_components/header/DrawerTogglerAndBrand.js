@@ -1,8 +1,8 @@
 import { DivContainer, IconButton, LinkButton } from '@GCompo'
+import { useDrawerToggler } from '@Hooks'
 import Link from 'next/link'
 import { FaYoutube } from 'react-icons/fa'
 import { MdMenu } from 'react-icons/md'
-import { useDrawerToggler } from 'src/hooks/useDrawerToggler'
 import styled from 'styled-components'
 
 const Container = styled(DivContainer)`
@@ -11,9 +11,7 @@ const Container = styled(DivContainer)`
   height: var(--masthead-height);
 `
 
-const Icon = styled(IconButton).attrs({ Icon: MdMenu })`
-`
-
+// control the container size and icon size seperately
 const IconContainer = styled.div`
   width: var(--mini-drawer-width);
   height: var(--mini-drawer-width);
@@ -23,14 +21,13 @@ const IconContainer = styled.div`
 `
 
 export const DrawerTogglerAndBrand = () => {
-  console.log('new rendering')
   const togger = useDrawerToggler()
   return (
     <Container>
       <IconContainer>
-        <Icon
-          onClick={togger}
-        />
+        <IconButton onClick={togger}>
+          <MdMenu />
+        </IconButton>
       </IconContainer>
       <Link href='/' passHref>
         <LinkButton style={{ padding: '0.2em 0.5em' }}>

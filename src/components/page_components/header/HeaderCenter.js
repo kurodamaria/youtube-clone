@@ -16,23 +16,19 @@ const TextInput = styled.input.attrs({ type: 'text', placeholder: 'Search' })`
     outline: 1px solid ${props => props.theme.blue};
   }
 `
-const SearchButton = styled(IconButton).attrs({ Icon: MdSearch })`
+const SearchButton = styled(IconButton).attrs({ children: <MdSearch /> })`
   border-radius: 0;
-  // props.playAnimation just doesn't matter now
-  // because this class has more specifity (source order specifity) than the previous
-  // so the property will be override to none no matter what happened
-  animation-name: none;
+  transition: none !important;
 `
 
 const SearchFormCore = ({ className, style, inputFocused }) => {
-  const headerContext = useContext(HeaderContext)
+  const { headerLR } = useContext(HeaderContext)
   const ref = useRef()
   useMediaQuery('(max-width: 656px)', (mql) => {
     // if the max width of the viewport is 656px and the input is focused
     // we switch to mini search header immediately
     if (mql.matches && document.activeElement === ref.current) {
-      headerContext.headerLeft.setHide(true)
-      headerContext.headerRight.setHide(true)
+      headerLR.setHide(true)
     }
   })
 
@@ -56,21 +52,19 @@ const SearchForm = styled(SearchFormCore)`
   ${CssDisplayControl}
 `
 
-const SASearchButton = styled(IconButton).attrs({ Icon: MdSearch })`
+const SASearchButton = styled(IconButton).attrs({ children: <MdSearch /> })`
   ${CssDisplayControl}
 `
 
-const BackButton = styled(IconButton).attrs({ Icon: MdArrowBack })`
-  animation: none;
+const BackButton = styled(IconButton).attrs({ children: <MdArrowBack /> })`
   ${CssDisplayControl}
 `
 
 const HeaderCenterCore = ({ className, style }) => {
-  const headerContext = useContext(HeaderContext)
+  const { headerLR } = useContext(HeaderContext)
   useMediaQuery('(min-width: 657px)', (mql) => {
     if (mql.matches) {
-      headerContext.headerLeft.setHide(false)
-      headerContext.headerRight.setHide(false)
+      headerLR.setHide(false)
     }
   })
   const ref = useRef()
@@ -78,9 +72,8 @@ const HeaderCenterCore = ({ className, style }) => {
     // When use clicked outside the HeaderCenterContainer,
     // and the minified search heading is showing
     // dismiss the search
-    if (headerContext.headerLeft.hide) {
-      headerContext.headerLeft.setHide(false)
-      headerContext.headerRight.setHide(false)
+    if (headerLR.hide) {
+      headerLR.setHide(false)
     }
   })
   return (
@@ -88,23 +81,24 @@ const HeaderCenterCore = ({ className, style }) => {
       <BackButton
         onClick={
           () => {
-            headerContext.headerLeft.setHide(false)
-            headerContext.headerRight.setHide(false)
+            headerLR.setHide(false)
           }
         }
-        hide={!headerContext.headerLeft.hide}
+        hide={!headerLR.hide}
       />
-      <SearchForm position='relative' hide={headerContext.headerLeft.hide ? false : undefined} inputFocused={headerContext.headerLeft.hide} />
+      <SearchForm position='relative' hide={headerLR.hide ? false : undefined} inputFocused={headerLR.hide} />
       <SASearchButton
         onClick={
           () => {
-            headerContext.headerLeft.setHide(true)
-            headerContext.headerRight.setHide(true)
+            headerLR.setHide(true)
           }
         }
-        hide={headerContext.headerLeft.hide ? true : undefined}
+        hide={headerLR.hide ? true : undefined}
       />
-      <IconButton Icon={MdKeyboardVoice} />
+      <IconButton>
+        <MdKeyboardVoice />
+      </IconButton>
+
     </DivContainer>
   )
 }

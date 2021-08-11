@@ -1,7 +1,6 @@
 export * from './Button'
 export * from './Containers'
 export * from './Divider'
-export * from './Dropdown'
 export * from './IconButton'
 export * from './LinkButton'
 export * from './Menu'

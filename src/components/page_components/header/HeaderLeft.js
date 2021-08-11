@@ -10,9 +10,9 @@ const HeaderLeftContainer = styled(DisplayControlledDiv)`
 `
 
 export const HeaderLeft = () => {
-  const headerContext = useContext(HeaderContext)
+  const { headerLR } = useContext(HeaderContext)
   return (
-    <HeaderLeftContainer hide={headerContext.headerLeft.hide}>
+    <HeaderLeftContainer hide={headerLR.hide}>
       <DrawerTogglerAndBrand />
     </HeaderLeftContainer>
   )

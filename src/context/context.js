@@ -23,10 +23,9 @@ export const GlobalContextProvider = ({ children }) => {
 }
 
 export const HeaderContextProvider = ({ children }) => {
-  const headerLeft = useCustomNamedState('hide', false)
-  const headerRight = useCustomNamedState('hide', false)
+  const headerLR = useCustomNamedState('hide', false)
   return (
-    <HeaderContext.Provider value={{ headerLeft, headerRight }}>
+    <HeaderContext.Provider value={{ headerLR }}>
       {children}
     </HeaderContext.Provider>
   )

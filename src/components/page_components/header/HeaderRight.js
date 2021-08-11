@@ -3,7 +3,8 @@ import {
   MdVideoCall,
   MdApps,
   MdNotifications,
-  MdAccountCircle
+  MdAccountCircle,
+  MdVideoLibrary
 } from 'react-icons/md'
 
 import {
@@ -12,8 +13,8 @@ import {
 
 import styled from 'styled-components'
 
-import { Dropdown, Menu, MenuSection, MenuItem, IconButton, DisplayControlledDiv } from '@GCompo'
-import { useContext } from 'react'
+import { Menu, MenuItemLeading, MenuItemLabel, IconButton, DisplayControlledDiv, MenuTogger, MenuBody, MenuItem, MenuSection } from '@GCompo'
+import { useContext, useMemo } from 'react'
 import { HeaderContext } from '@Context'
 
 const HeaderRightContainer = styled(DisplayControlledDiv)`
@@ -22,41 +23,89 @@ const HeaderRightContainer = styled(DisplayControlledDiv)`
   align-items: center;
 `
 
-export const HeaderRight = () => {
-  const headerContext = useContext(HeaderContext)
+const MakeMenu = ({ TogglerIcon, sections }) => {
   return (
-    <HeaderRightContainer hide={headerContext.headerRight.hide}>
-      <Dropdown togger={<IconButton Icon={MdVideoCall} playAnimation />}>
-        <Menu>
-          <MenuItem label='Upload video' icon={<FaYoutube />} />
-          <MenuItem label='Go live' icon={<FaYoutube />} />
-        </Menu>
-      </Dropdown>
-      <Dropdown togger={<IconButton Icon={MdApps} />} left>
-        <Menu>
-          <MenuSection>
-            <MenuItem label='Youtube TV' icon={FaYoutube} />
-          </MenuSection>
-          <MenuSection>
-            <MenuItem label='Youtube Music' icon={FaYoutube} />
-            <MenuItem label='Youtube Kids' icon={FaYoutube} />
-          </MenuSection>
-          <MenuSection>
-            <MenuItem label='Youtube Academy' icon={FaYoutube} />
-            <MenuItem label='Youtube for Artists' icon={FaYoutube} />
-          </MenuSection>
-        </Menu>
-      </Dropdown>
-      <Dropdown togger={<IconButton Icon={MdNotifications} />} left>
-        <div>
-          NOTIFICATION CENTER
-        </div>
-      </Dropdown>
-      <Dropdown left togger={<IconButton Icon={MdAccountCircle} />}>
-        <div>
-          USER CENTER
-        </div>
-      </Dropdown>
+    <Menu>
+      <MenuTogger>
+        <IconButton>
+          <TogglerIcon />
+        </IconButton>
+      </MenuTogger>
+      <MenuBody>
+        {
+          sections.map((section) => {
+            return (
+              <MenuSection>
+                {
+                  section.map((item) => <MenuItem {...item} />)
+                }
+              </MenuSection>
+            )
+          })
+        }
+      </MenuBody>
+    </Menu>
+  )
+}
+
+export const HeaderRight = () => {
+  const { headerLR } = useContext(HeaderContext)
+
+  const newVideoMenuData = useMemo(() => {
+    return [
+      [
+        { leading: <FaYoutube />, label: 'Upload video', onClick: undefined },
+        { leading: <FaYoutube />, label: 'Go live', onClick: undefined }
+      ]
+    ]
+  }, [])
+
+  const youtubeAppsMenuData = useMemo(() => {
+    return [
+      [
+        { leading: <FaYoutube />, label: 'Youtube TV', onClick: undefined }
+      ],
+      [
+        { leading: <FaYoutube />, label: 'Youtube Music', onClick: undefined },
+        { leading: <FaYoutube />, label: 'Youtube Kids', onClick: undefined }
+      ],
+      [
+        { leading: <FaYoutube />, label: 'Creator Academy', onClick: undefined },
+        { leading: <FaYoutube />, label: 'YouTube for Artists', onClick: undefined }
+      ]
+    ]
+  }, [])
+
+  return (
+    <HeaderRightContainer hide={headerLR.hide}>
+      <MakeMenu
+        TogglerIcon={MdVideoCall}
+        sections={newVideoMenuData}
+      />
+      <MakeMenu
+        TogglerIcon={MdApps}
+        sections={youtubeAppsMenuData}
+      />
+      <Menu>
+        <MenuTogger>
+          <IconButton>
+            <MdNotifications />
+          </IconButton>
+        </MenuTogger>
+        <MenuBody>
+          <div style={{ width: '360px', height: '100vh', backgroundColor: 'lightcoral' }} />
+        </MenuBody>
+      </Menu>
+      <Menu>
+        <MenuTogger>
+          <IconButton>
+            <MdAccountCircle />
+          </IconButton>
+        </MenuTogger>
+        <MenuBody>
+          <div style={{ width: '360px', height: '100vh', backgroundColor: 'lightblue' }} />
+        </MenuBody>
+      </Menu>
     </HeaderRightContainer>
   )
 }

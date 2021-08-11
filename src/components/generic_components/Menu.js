@@ -1,43 +1,108 @@
-import styled from 'styled-components'
+import { createContext, useContext, useRef, useState } from 'react'
+import { CssDisplayControl } from '@Styles'
+import styled, { css } from 'styled-components'
+import { useClickOutside } from '@Hooks'
 
-import { DivContainer } from './Containers'
+const MenuContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`
 
-const MenuItemCore = ({ icon, label, style, className }) => {
+const MenuToggerContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const MenuBodyContainer = styled.div`
+  ${CssDisplayControl}
+
+  position: absolute;
+  ${props => props.right ? css`left: 0;` : css`right: 0;`}
+
+  background-color: ${props => props.theme.white};
+  font-size: 1rem;
+
+  border: 1px solid ${props => props.theme.white70};
+  border-top: 0;
+`
+
+const MenuContext = createContext()
+
+const MenuItemContainer = styled.div`
+  display: flex;
+  padding: 0.5em;
+  padding-left: 1em;
+  padding-right: 2em;
+`
+
+const MenuItemLeading = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-right: 0.5em;
+`
+const MenuItemLabel = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
+`
+
+export const MenuSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  & + & {
+    border-top: 1px solid ${props => props.theme.white70};
+  } 
+  padding: 0.5em 0em;
+`
+
+export const MenuItem = ({ leading, label }) => {
   return (
-    <div className={className} style={style}>
-      {icon}
-      {label}
-    </div>
+    <MenuItemContainer>
+      <MenuItemLeading>
+        {leading}
+      </MenuItemLeading>
+      <MenuItemLabel>
+        {label}
+      </MenuItemLabel>
+    </MenuItemContainer>
   )
 }
 
-export const MenuItem = styled(MenuItemCore)`
-  text-align: start;
-  padding: 1em 2em 1em 1em;
-`
-
-export const MenuSection = styled(DivContainer)`
-  display: flex;
-  flex-direction: column;
-  border: 1px solid red;
-  margin: 0.3em 0;
-  & + & {
-    margin-top: 0;
-  }
-`
-
-const MenuContainer = styled(DivContainer)`
-  display: flex;
-  border: 1px solid black;
-  flex-direction: column;
-  justify-content: flex-start;
-`
-
-// children should be an array of MenuItem
-export const Menu = ({ children }) => {
+export const MenuTogger = ({ children }) => {
+  const { hideBody, setHideBody } = useContext(MenuContext)
   return (
-    <MenuContainer>
+    <MenuToggerContainer onClick={() => { setHideBody(!hideBody) }}>
       {children}
-    </MenuContainer>
+    </MenuToggerContainer>
+  )
+}
+
+export const MenuBody = ({ children }) => {
+  const { hideBody } = useContext(MenuContext)
+  return (
+    <MenuBodyContainer hide={hideBody}>
+      {children}
+    </MenuBodyContainer>
+  )
+}
+
+export const Menu = ({ children }) => {
+  const [hideBody, setHideBody] = useState(true)
+  const ref = useRef()
+  useClickOutside(ref, () => {
+    if (!hideBody) {
+      setHideBody(true)
+    }
+  })
+  return (
+    <MenuContext.Provider value={{ hideBody, setHideBody }}>
+      <MenuContainer ref={ref}>
+        {children}
+      </MenuContainer>
+    </MenuContext.Provider>
   )
 }

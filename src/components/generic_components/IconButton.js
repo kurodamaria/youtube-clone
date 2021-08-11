@@ -2,14 +2,14 @@ import styled from 'styled-components'
 
 import { CssClickTransition } from '@Styles'
 
-const IconButtonCore = ({ Icon, onClick, className, style }) => {
+const IconButtonCore = ({ children, onClick, className, style }) => {
   return (
     <button
       className={className}
       style={style}
       onClick={onClick}
     >
-      <Icon />
+      {children}
     </button>
   )
 }
