@@ -1,10 +1,17 @@
 import styled from 'styled-components'
 
-// import { Button, DivContainer } from '@GCompo'
-import { Button } from './Button'
 import { DivContainer } from './Containers'
 
-export const MenuItem = styled(Button)`
+const MenuItemCore = ({ icon, label, style, className }) => {
+  return (
+    <div className={className} style={style}>
+      {icon}
+      {label}
+    </div>
+  )
+}
+
+export const MenuItem = styled(MenuItemCore)`
   text-align: start;
   padding: 1em 2em 1em 1em;
 `

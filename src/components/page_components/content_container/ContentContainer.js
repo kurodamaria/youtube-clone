@@ -1,6 +1,5 @@
 import { GlobalContext } from '@Context'
 import { useMediaQueryT } from '@Hooks'
-import { useRouter } from 'next/router'
 import { useCallback, useContext, useState } from 'react'
 import styled from 'styled-components'
 

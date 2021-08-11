@@ -1,49 +1,26 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
-import { CssIconButton, CssAnimationFadeBorder } from '@Styles'
-import { usePlayAnimation } from '@Hooks'
+import { CssClickTransition } from '@Styles'
 
-const IconButtonCore = styled.button`
-  ${CssIconButton}
-  ${
-    props => props.playAnimation ? css`animation-name: ${CssAnimationFadeBorder};` : ''
-  }
-  animation-duration: 0.3s;
-`
-
-const IconButton = ({ Icon, onClick, onFocus, className, style }) => {
-  const aniProps = usePlayAnimation('onClick', onClick)
+const IconButtonCore = ({ Icon, onClick, className, style }) => {
   return (
-    <IconButtonCore
+    <button
       className={className}
       style={style}
-      {...aniProps}
-      onFocus={onFocus}
+      onClick={onClick}
     >
       <Icon />
-    </IconButtonCore>
+    </button>
   )
 }
-export { IconButton }
 
-// Animation won't work
-//
-// const IconButtonCore = ({ Icon, onClick, className }) => {
-//   const aniProps = usePlayAnimation('onClick', onClick)
-//   return (
-//     <button
-//       className={className}
-//       {...aniProps}
-//     >
-//       <Icon />
-//     </button>
-//   )
-// }
+export const IconButton = styled(IconButtonCore)`
+  ${CssClickTransition}
 
-// export const IconButton = styled(IconButtonCore)`
-//   ${CssIconButton}
-//   ${
-//     props => props.playAnimation ? css`animation-name: ${CssAnimationFadeBorder};` : ''
-//   }
-//   animation-duration: 0.3s;
-// `
+  display: flex;
+  padding: 0.3em 0.3em;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: ${props => props.fontSize ? props.fontSize : 'inherit'};
+`

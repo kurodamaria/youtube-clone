@@ -28,22 +28,22 @@ export const HeaderRight = () => {
     <HeaderRightContainer hide={headerContext.headerRight.hide}>
       <Dropdown togger={<IconButton Icon={MdVideoCall} playAnimation />}>
         <Menu>
-          <MenuItem label='Upload video' />
-          <MenuItem label='Go live' />
+          <MenuItem label='Upload video' icon={<FaYoutube />} />
+          <MenuItem label='Go live' icon={<FaYoutube />} />
         </Menu>
       </Dropdown>
       <Dropdown togger={<IconButton Icon={MdApps} />} left>
         <Menu>
           <MenuSection>
-            <MenuItem label='Youtube TV' Icon={FaYoutube} />
+            <MenuItem label='Youtube TV' icon={FaYoutube} />
           </MenuSection>
           <MenuSection>
-            <MenuItem label='Youtube Music' Icon={FaYoutube} />
-            <MenuItem label='Youtube Kids' Icon={FaYoutube} />
+            <MenuItem label='Youtube Music' icon={FaYoutube} />
+            <MenuItem label='Youtube Kids' icon={FaYoutube} />
           </MenuSection>
           <MenuSection>
-            <MenuItem label='Youtube Academy' Icon={FaYoutube} />
-            <MenuItem label='Youtube for Artists' Icon={FaYoutube} />
+            <MenuItem label='Youtube Academy' icon={FaYoutube} />
+            <MenuItem label='Youtube for Artists' icon={FaYoutube} />
           </MenuSection>
         </Menu>
       </Dropdown>

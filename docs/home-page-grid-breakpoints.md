@@ -25,3 +25,30 @@ calc(100% - var(--ytd-rich-grid-item-margin) * 2)
 calc( 100% / var(--ytd-rich-grid-items-per-row) - var(--ytd-rich-grid-item-margin) - 0.01px );
 ```
 
+So I am saying that I will calculate in this way
+
+```css
+max-width: 2256px;
+margin: 0 auto;
+display: grid;
+gap: 1em 1em;
+--items-per-row: 1;
+@media(min-width: 512px) {
+    --items-per-row: 2;
+}
+@media(min-width: 888px) {
+    --items-per-row: 3;
+}
+@media(min-width: 1144px) {
+    --items-per-row: 4;
+}
+@media(min-width: 1800px) {
+    --items-per-row: 5;
+}
+@media(min-width: 2136px) {
+    --items-per-row: 6;
+}
+width: 100%;
+grid-template-columns: repeat(var(--items-per-row), calc(100% / var(--items-per-row)));
+```
+
