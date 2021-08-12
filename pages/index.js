@@ -1,7 +1,11 @@
+import { TopLoadingIndicator } from '@GCompo'
 import { IndexContent } from '@PCompo'
 
 export default function Home () {
   return (
-    <IndexContent />
+    <>
+      <TopLoadingIndicator />
+      <IndexContent />
+    </>
   )
 }
