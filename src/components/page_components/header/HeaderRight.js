@@ -13,7 +13,7 @@ import {
 
 import styled from 'styled-components'
 
-import { Menu, MenuItemLeading, MenuItemLabel, IconButton, DisplayControlledDiv, MenuTogger, MenuBody, MenuItem, MenuSection } from '@GCompo'
+import { Menu, MenuItemLeading, MenuItemLabel, IconButton, DisplayControlledDiv, MenuTogger, MenuBody, MenuItem, MenuSection, Spinner, Loading } from '@GCompo'
 import { useContext, useMemo } from 'react'
 import { HeaderContext } from '@Context'
 
@@ -93,7 +93,9 @@ export const HeaderRight = () => {
           </IconButton>
         </MenuTogger>
         <MenuBody>
-          <div style={{ width: '360px', height: '100vh', backgroundColor: 'lightcoral' }} />
+          <div style={{ width: '360px', height: '100vh', backgroundColor: 'lightcoral' }}>
+            <Loading />
+          </div>
         </MenuBody>
       </Menu>
       <Menu>

@@ -9,15 +9,16 @@ import { useClickOutside, useMediaQuery } from '@Hooks'
 const TextInput = styled.input.attrs({ type: 'text', placeholder: 'Search' })`
   width: 100%;
   outline: none;
-  border: 0;
   font-size: 1.12rem;
   padding: 0.1em 1em;
+  border: 0;
   &:focus {
-    outline: 1px solid ${props => props.theme.blue};
+    border: 1px solid ${props => props.theme.blue};
   }
 `
 const SearchButton = styled(IconButton).attrs({ children: <MdSearch /> })`
   border-radius: 0;
+  border-left: 1px solid ${props => props.theme.white85};
   transition: none !important;
 `
 
@@ -48,7 +49,8 @@ const SearchFormCore = ({ className, style, inputFocused }) => {
 const SearchForm = styled(SearchFormCore)`
   display: flex;
   flex-grow: 1;
-  border: 1px solid ${props => props.theme.white90};
+  border: 1px solid ${props => props.theme.white85};
+  border-radius: 2px;
   ${CssDisplayControl}
 `
 

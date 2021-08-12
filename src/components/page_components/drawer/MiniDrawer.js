@@ -1,8 +1,8 @@
 import { GlobalContext } from '@Context'
 import { usePlayAnimation } from '@Hooks'
-import { CssAnimationFadeBorder, CssClickable, CssDisplayControl } from '@Styles'
-import { useRouter } from 'next/router'
+import { CssAnimationFadeBorder, CssClickTransition, CssDisplayControl } from '@Styles'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useContext, useEffect } from 'react'
 import { MdExplore, MdHome, MdSubscriptions, MdVideoLibrary } from 'react-icons/md'
 import styled, { css } from 'styled-components'
@@ -26,7 +26,7 @@ const Tower = styled.a`
   flex-direction: column;
   align-items: center;
   padding: 1em 0em;
-  ${CssClickable}
+  ${CssClickTransition}
   ${
     props => props.playAnimation ? css`animation-name: ${CssAnimationFadeBorder};` : ''
   }

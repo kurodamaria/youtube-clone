@@ -18,6 +18,8 @@ export const IconButton = styled(IconButtonCore)`
   ${CssClickTransition}
 
   display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0.3em 0.3em;
   border: 0;
   border-radius: 50%;

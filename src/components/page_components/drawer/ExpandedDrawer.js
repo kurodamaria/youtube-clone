@@ -17,7 +17,7 @@ const Container = styled.div`
   flex-direction: column;
   flex-wrap: wrap;
   background-color: ${props => props.theme.white};
-  z-index: 2;
+  z-index: 3;
   transition: transform 0.2s,
               visibility 0s 0.2s;
   ${props => !props.hide ? css`transform: translateX(240px);` : css`transform: translateX(-240px);`}
@@ -98,7 +98,7 @@ const ExpandedDrawerCore = ({ className, style }) => {
 const ExpandedDrawer = styled(ExpandedDrawerCore)`
   // disable the layer
   ${ModalLayer} {
-    z-index: 1;
+    z-index: 2;
   }
 `
 export { ExpandedDrawer }
