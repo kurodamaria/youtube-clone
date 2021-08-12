@@ -13,3 +13,13 @@ export const CssDisplayControl = css`
   // remove from document flow
   position: ${props => props.hide === undefined ? props.position : props.hide === true ? 'fixed' : props.position} !important;
 `
+
+export const CSSDC = css`
+  display: ${props => props.hide === undefined ? '' : props.hide ? 'none' : props.display} !important;
+`
+
+export const CSSVPC = css`
+  visibility: ${props => props.hide === undefined ? '' : props.hide === true ? 'hidden' : 'visible'} !important;
+  // remove from document flow
+  position: ${props => props.hide === undefined ? props.position : props.hide === true ? 'fixed' : props.position} !important;
+`
