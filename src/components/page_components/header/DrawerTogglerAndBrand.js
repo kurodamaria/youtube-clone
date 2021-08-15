@@ -1,6 +1,7 @@
+import { LayoutContext } from '@Context'
 import { DivContainer, IconButton, LinkButton } from '@GCompo'
-import { useDrawerToggler } from '@Hooks'
 import Link from 'next/link'
+import { useContext } from 'react'
 import { FaYoutube } from 'react-icons/fa'
 import { MdMenu } from 'react-icons/md'
 import styled from 'styled-components'
@@ -21,11 +22,11 @@ const IconContainer = styled.div`
 `
 
 export const DrawerTogglerAndBrand = () => {
-  const togger = useDrawerToggler()
+  const toggler = useContext(LayoutContext).onClickDrawerToggler
   return (
     <Container>
       <IconContainer>
-        <IconButton onClick={togger}>
+        <IconButton onClick={toggler}>
           <MdMenu />
         </IconButton>
       </IconContainer>

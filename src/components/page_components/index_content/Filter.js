@@ -1,8 +1,7 @@
-import { IndexPageContext } from '@Context'
+import { IndexPageContext, LayoutContext } from '@Context'
 import { IconButton } from '@GCompo'
 import { useContext, useRef, useState } from 'react'
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md'
-import { useLeftPanelWidth } from 'src/hooks/useLeftPanelWidth'
 import { CssDisplayControl } from 'src/styles'
 import styled, { css } from 'styled-components'
 
@@ -46,16 +45,17 @@ const FilterOptionsContainer = styled.div`
 
 const FilterContainer = styled.div`
   position: fixed;
-  top: var(--masthead-height);
+  top: var(--header-height);
   right: 0;
   left: ${props => props.left};
-  height: var(--masthead-height);
+  height: var(--header-height);
   z-index: 1;
   border-top: 1px solid ${props => props.theme.white70};
   border-bottom: 1px solid ${props => props.theme.white70};
   background-color: ${props => props.theme.white};
   padding: 1em 1em;
   display: flex;
+  justify-content: center;
   font-size: 0.8rem;
 `
 
@@ -98,7 +98,7 @@ export const Filter = () => {
   const [hideLeft, setHideLeft] = useState(true)
   const [hideRight, setHideRight] = useState(false)
   const ref = useRef()
-  const left = useLeftPanelWidth()
+  const left = useContext(LayoutContext).ContentState.marginLeft
   return (
     <FilterContainer left={left}>
       <ScrollControllerWrapperLeft hide={hideLeft}>

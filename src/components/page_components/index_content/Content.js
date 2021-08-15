@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 const IndexContentContainer = styled.div`
   max-width: 2256px;
-  margin: calc(var(--masthead-height) * 2 + 1em) 1em auto auto;
+  margin: calc(var(--header-height) * 2 + 1em) auto 1em auto;
   padding: 0 1em;
   display: grid;
   --items-per-row: 1;

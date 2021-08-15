@@ -49,8 +49,6 @@ const MakeMenu = ({ TogglerIcon, sections }) => {
 }
 
 export const HeaderRight = () => {
-  const { headerLR } = useContext(HeaderContext)
-
   const newVideoMenuData = useMemo(() => {
     return [
       [
@@ -77,7 +75,7 @@ export const HeaderRight = () => {
   }, [])
 
   return (
-    <HeaderRightContainer hide={headerLR.hide}>
+    <HeaderRightContainer>
       <MakeMenu
         TogglerIcon={MdVideoCall}
         sections={newVideoMenuData}

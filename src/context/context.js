@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react'
-import { useCustomNamedState } from '@Hooks'
+import { useStateObject } from '@Hooks'
 
 export const GlobalContext = createContext()
 export const HeaderContext = createContext()
@@ -10,12 +10,12 @@ export const GlobalContextProvider = ({ children }) => {
   // so that the initial behaviour of hide and show is
   // controlled by css media queries
   const expandedDrawer = {
-    ...useCustomNamedState('hide'),
-    ...useCustomNamedState('isShown'),
-    ...useCustomNamedState('disableMq'),
-    ...useCustomNamedState('hideModal')
+    ...useStateObject('hide'),
+    ...useStateObject('isShown'),
+    ...useStateObject('disableMq'),
+    ...useStateObject('hideModal')
   }
-  const miniDrawer = useCustomNamedState('hide')
+  const miniDrawer = useStateObject('hide')
   return (
     <GlobalContext.Provider value={{ expandedDrawer, miniDrawer }}>
       {children}
@@ -24,7 +24,7 @@ export const GlobalContextProvider = ({ children }) => {
 }
 
 export const HeaderContextProvider = ({ children }) => {
-  const headerLR = useCustomNamedState('hide', false)
+  const headerLR = useStateObject('hide', false)
   return (
     <HeaderContext.Provider value={{ headerLR }}>
       {children}

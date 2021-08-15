@@ -1,23 +1,21 @@
-import { GlobalContext } from '@Context'
+import { LayoutContext } from '@Context'
+import { RenderIf } from '@Helpers'
 import { usePlayAnimation } from '@Hooks'
 import { CssAnimationFadeBorder, CssClickTransition, CssDisplayControl } from '@Styles'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import { MdExplore, MdHome, MdSubscriptions, MdVideoLibrary } from 'react-icons/md'
 import styled, { css } from 'styled-components'
 
 const MiniDrawerContainer = styled.div`
   position: fixed;
-  top: var(--masthead-height);
+  top: var(--header-height);
   left: 0;
   bottom: 0;
   width: var(--mini-drawer-width);
   display: flex;
   flex-direction: column;
-  @media(max-width: 807px) {
-    visibility: hidden;
-  }
   ${CssDisplayControl}
 `
 
@@ -70,49 +68,32 @@ const MiniNavi = ({ href, icon, text }) => {
   )
 }
 
-function useHideMiniDrawer () {
-  const { expandedDrawer, miniDrawer } = useContext(GlobalContext)
-  useEffect(() => {
-    // only >= 1329px
-    // ExpandedDrawer    MiniDrawer
-    // true              undefined
-    // false             true
-    // undefined         undefined
-    if (window.innerWidth >= 1329) {
-      if (expandedDrawer.hide === false) {
-        miniDrawer.setHide(true)
-      } else {
-        miniDrawer.setHide(undefined)
-      }
-    }
-  }, [expandedDrawer, miniDrawer])
-}
-
 export const MiniDrawer = () => {
-  useHideMiniDrawer()
-  const { miniDrawer } = useContext(GlobalContext)
+  const { MiniDrawerState } = useContext(LayoutContext)
   return (
-    <MiniDrawerContainer hide={miniDrawer.hide}>
-      <MiniNavi
-        icon={<MdHome />}
-        text='Home'
-        href='/'
-      />
-      <MiniNavi
-        icon={<MdExplore />}
-        text='Explore'
-        href='/explore'
-      />
-      <MiniNavi
-        icon={<MdSubscriptions />}
-        text='Subscriptions'
-        href='/subscriptions'
-      />
-      <MiniNavi
-        icon={<MdVideoLibrary />}
-        text='Library'
-        href='/library'
-      />
-    </MiniDrawerContainer>
+    <RenderIf cond={MiniDrawerState.show}>
+      <MiniDrawerContainer>
+        <MiniNavi
+          icon={<MdHome />}
+          text='Home'
+          href='/'
+        />
+        <MiniNavi
+          icon={<MdExplore />}
+          text='Explore'
+          href='/explore'
+        />
+        <MiniNavi
+          icon={<MdSubscriptions />}
+          text='Subscriptions'
+          href='/subscriptions'
+        />
+        <MiniNavi
+          icon={<MdVideoLibrary />}
+          text='Library'
+          href='/library'
+        />
+      </MiniDrawerContainer>
+    </RenderIf>
   )
 }

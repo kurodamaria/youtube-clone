@@ -1,18 +1,17 @@
-import { ThemeProvider } from 'styled-components'
-import { GlobalContextProvider } from '@Context'
+import { LayoutContextProvider } from '@Context'
 import { Navi } from '@PCompo'
-
 import { GlobalStyle, theme } from '@Styles'
+import { ThemeProvider } from 'styled-components'
 
 function MyApp ({ Component, pageProps }) {
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme.light}>
-        <GlobalContextProvider>
+        <LayoutContextProvider>
           <Navi />
           <Component {...pageProps} />
-        </GlobalContextProvider>
+        </LayoutContextProvider>
       </ThemeProvider>
     </>
   )

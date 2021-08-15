@@ -1,19 +1,19 @@
-import { HeaderContextProvider } from '@Context'
 import { DisplayControlledDiv } from '@GCompo'
-import { useClickOutside } from '@Hooks'
+import { RenderIf } from '@Helpers'
 import { CssFixed, CssHeaderText } from '@Styles'
-import { useRef } from 'react'
 import styled from 'styled-components'
 import { HeaderCenter } from './HeaderCenter'
 import { HeaderLeft } from './HeaderLeft'
 import { HeaderRight } from './HeaderRight'
+import { useContext } from 'react'
+import { LayoutContext } from '@Context'
 
 const HeaderContainer = styled(DisplayControlledDiv)`
   ${CssFixed}
   ${CssHeaderText}
   
   bottom: unset;
-  height: var(--masthead-height);
+  height: 57px;
 
   display: flex;
   justify-content: space-between;
@@ -24,17 +24,16 @@ const HeaderContainer = styled(DisplayControlledDiv)`
 `
 
 export function Header () {
-  const ref = useRef()
-  useClickOutside(() => {
-    console.log(ref.current)
-  })
+  const { LRState } = useContext(LayoutContext)
   return (
-    <HeaderContainer ref={ref}>
-      <HeaderContextProvider>
+    <HeaderContainer>
+      <RenderIf cond={LRState.show}>
         <HeaderLeft />
-        <HeaderCenter />
+      </RenderIf>
+      <HeaderCenter />
+      <RenderIf cond={LRState.show}>
         <HeaderRight />
-      </HeaderContextProvider>
+      </RenderIf>
     </HeaderContainer>
   )
 }

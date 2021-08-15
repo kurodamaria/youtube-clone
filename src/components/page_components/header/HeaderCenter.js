@@ -1,10 +1,10 @@
+import { LayoutContext } from '@Context'
 import { DivContainer, IconButton } from '@GCompo'
-import { HeaderContext } from '@Context'
+import { RenderIf } from '@Helpers'
 import { useContext, useEffect, useRef } from 'react'
 import { MdArrowBack, MdKeyboardVoice, MdSearch } from 'react-icons/md'
-import styled from 'styled-components'
 import { CssDisplayControl } from 'src/styles'
-import { useClickOutside, useMediaQuery } from '@Hooks'
+import styled from 'styled-components'
 
 const TextInput = styled.input.attrs({ type: 'text', placeholder: 'Search' })`
   width: 100%;
@@ -22,25 +22,28 @@ const SearchButton = styled(IconButton).attrs({ children: <MdSearch /> })`
   transition: none !important;
 `
 
-const SearchFormCore = ({ className, style, inputFocused }) => {
-  const { headerLR } = useContext(HeaderContext)
+const SearchFormCore = ({ className, style }) => {
+  const { SearchFormInputState } = useContext(LayoutContext)
   const ref = useRef()
-  useMediaQuery('(max-width: 656px)', (mql) => {
-    // if the max width of the viewport is 656px and the input is focused
-    // we switch to mini search header immediately
-    if (mql.matches && document.activeElement === ref.current) {
-      headerLR.setHide(true)
-    }
-  })
-
   useEffect(() => {
-    if (inputFocused) {
+    if (SearchFormInputState.focus) {
       ref.current.focus()
     }
-  }, [inputFocused, ref])
+  }, [SearchFormInputState.focus])
   return (
     <form className={className} style={style}>
-      <TextInput ref={ref} />
+      <TextInput
+        ref={ref}
+        onFocus={() => {
+          // prevent infinite loop?
+          if (!SearchFormInputState.focus) {
+            SearchFormInputState.setFocus(true)
+          }
+        }}
+        onBlur={() => {
+          SearchFormInputState.setFocus(false)
+        }}
+      />
       <SearchButton />
     </form>
   )
@@ -63,64 +66,29 @@ const BackButton = styled(IconButton).attrs({ children: <MdArrowBack /> })`
 `
 
 const HeaderCenterCore = ({ className, style }) => {
-  const { headerLR } = useContext(HeaderContext)
-  useMediaQuery('(min-width: 657px)', (mql) => {
-    if (mql.matches) {
-      headerLR.setHide(false)
-    }
-  })
-  const ref = useRef()
-  useClickOutside(ref, () => {
-    // When use clicked outside the HeaderCenterContainer,
-    // and the minified search heading is showing
-    // dismiss the search
-    if (headerLR.hide) {
-      headerLR.setHide(false)
-    }
-  })
+  const { CenterRef, BackButtonState, onClickBackButton, SearchFormState, SASearchButtonState, onClickSASearchButton } = useContext(LayoutContext)
   return (
-    <DivContainer ref={ref} className={className} style={style}>
-      <BackButton
-        onClick={
-          () => {
-            headerLR.setHide(false)
-          }
-        }
-        hide={!headerLR.hide}
-      />
-      <SearchForm position='relative' hide={headerLR.hide ? false : undefined} inputFocused={headerLR.hide} />
-      <SASearchButton
-        onClick={
-          () => {
-            headerLR.setHide(true)
-          }
-        }
-        hide={headerLR.hide ? true : undefined}
-      />
+    <DivContainer ref={CenterRef} className={className} style={style}>
+      <RenderIf cond={BackButtonState.show}>
+        <BackButton onClick={onClickBackButton} />
+      </RenderIf>
+      <RenderIf cond={SearchFormState.show}>
+        <SearchForm />
+      </RenderIf>
+      <RenderIf cond={SASearchButtonState.show}>
+        <SASearchButton onClick={onClickSASearchButton} />
+      </RenderIf>
       <IconButton>
         <MdKeyboardVoice />
       </IconButton>
-
     </DivContainer>
   )
 }
 
 export const HeaderCenter = styled(HeaderCenterCore)`
-  max-width: var(--masthead-center-max-width);
+  max-width: var(--header-center-max-width);
   display: flex;
   justify-content: flex-end;
   flex-grow: 1;
   align-items: center;
-  ${SASearchButton} {
-    @media(min-width: 657px) {
-      visibility: hidden;
-      position: fixed;
-    }
-  }
-  ${SearchForm} {
-    @media(max-width: 656px) {
-      visibility: hidden;
-      position: fixed;
-    }
-  }
 `

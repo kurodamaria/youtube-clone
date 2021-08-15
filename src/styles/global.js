@@ -1,12 +1,10 @@
 import { createGlobalStyle } from 'styled-components'
+import { LayoutCSSVars } from '@Context'
 
 export const GlobalStyle = createGlobalStyle`
   :root {
     box-sizing: border-box;
-    --masthead-height: 56px;
-    --masthead-center-max-width: 656px;
-    --expanded-drawer-width: 240px; 
-    --mini-drawer-width: 72px;
+    ${LayoutCSSVars}
   }
   *,
   *::before,
