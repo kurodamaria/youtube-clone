@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-wc $(tree -if ../src | grep js)
+wc $(tree -if ../src | grep '[tj]s')

@@ -1,4 +1,0 @@
-https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA&part=snippet&chart=mostPopular&maxResults=50
-https://www.googleapis.com/youtube/v3/videoCategories?key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA&part=snippet
-https://www.googleapis.com/youtube/v3/i18nRegions?key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA&part=snippet
-https://www.googleapis.com/youtube/v3/channels?key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA&part=contentDetails&id=UChmpTxQ0Gp8KEJKsqzeg9Lg
