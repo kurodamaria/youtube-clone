@@ -238,12 +238,6 @@ function HeaderCenter() {
   )
 }
 
-const Box = styled.div`
-  height: 400px;
-  width: 150px;
-  background-color: lightcoral;
-`
-
 const headerDropdownMenuIconContext = {
   style: {
     color: 'red',
@@ -260,29 +254,43 @@ function HeaderEnd() {
         <IconContext.Provider value={headerDropdownMenuIconContext}>
           <Menu>
             <NavSection>
-              <MenuItem Icon={FaYoutube} title='Upload video' to='/not-implemented'/>
-              <MenuItem Icon={FaYoutube} title='Go live' to='/not-implemented'/>
+              <Link to='/not-implemented'>
+                <MenuItem Icon={FaYoutube} title='Upload video'/>
+              </Link>
+              <Link to='/not-implemented'>
+                <MenuItem Icon={FaYoutube} title='Go live'/>
+              </Link>
             </NavSection>
           </Menu>
         </IconContext.Provider>
-
       </Dropdown>
       <Dropdown>
         <HeaderIconButton Icon={MdApps}/>
         <IconContext.Provider value={headerDropdownMenuIconContext}>
           <Menu>
             <NavSection>
-              <MenuItem Icon={FaYoutube} title='YouTube TV' to='/not-implemented'/>
+              <Link to='/not-implemented'>
+                <MenuItem Icon={FaYoutube} title='YouTube TV'/>
+              </Link>
             </NavSection>
             <hr/>
             <NavSection>
-              <MenuItem Icon={FaYoutube} title='YouTube Music' to='/not-implemented'/>
-              <MenuItem Icon={FaYoutube} title='YouTube Kids' to='/not-implemented'/>
+              <Link to='/not-implemented'>
+
+                <MenuItem Icon={FaYoutube} title='YouTube Music'/>
+              </Link>
+              <Link to='/not-implemented'>
+                <MenuItem Icon={FaYoutube} title='YouTube Kids'/>
+              </Link>
             </NavSection>
             <hr/>
             <NavSection>
-              <MenuItem Icon={FaYoutube} title='Creator Academy' to='/not-implemented'/>
-              <MenuItem Icon={FaYoutube} title='YouTube for Artists' to='/not-implemented'/>
+              <Link to='/not-implemented'>
+                <MenuItem Icon={FaYoutube} title='Creator Academy'/>
+              </Link>
+              <Link to='/not-implemented'>
+                <MenuItem Icon={FaYoutube} title='YouTube for Artists'/>
+              </Link>
             </NavSection>
           </Menu>
         </IconContext.Provider>

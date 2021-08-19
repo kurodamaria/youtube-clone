@@ -18,16 +18,18 @@ export function PageContent ({children}: PageContentPropsT):JSX.Element {
 type PageContentContainerPropsT = {
   marginLeft: string;
 }
-
 const PageContentContainer = styled.div<PageContentContainerPropsT>`
-  position: relative;
-  margin-top: var(--header-height);
-  margin-left: 0;
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
   @media (min-width: 808px) {
-    margin-left: var(--mini-guide-width);
+    left: var(--mini-guide-width);
   }
   @media (min-width: 1329px) {
-    margin-left: var(--guide-width);
-    margin-left: ${props => props.marginLeft};
+    left: var(--guide-width);
+    left: ${props => props.marginLeft};
   }
 `

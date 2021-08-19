@@ -8,7 +8,6 @@ export function useCheckPermission(name: string) {
     let status: PermissionStatus;
     const handle = () => {
       setState(status.state)
-      console.log(status.state)
     }
     navigator.permissions.query({name} as PermissionDescriptor).then((res) => {
       status = res

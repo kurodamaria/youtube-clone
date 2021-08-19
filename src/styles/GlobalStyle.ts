@@ -19,6 +19,7 @@ export const GlobalStyle = createGlobalStyle`
     --modal-block-z-index: calc(var(--header-z-index) + 1);
     --search-with-voice-z-index: calc(var(--header-z-index) + 2);
     --guide-z-index: calc(var(--header-z-index) + 2);
+    --home-content-filter-height: 56px;
   }
   *,
   *::before,

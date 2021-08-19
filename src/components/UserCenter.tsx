@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, {ThemeContext} from "styled-components";
 import {NativeLink} from "./NativeLink";
 import {Menu, MenuItem} from "./Menu";
 import {NavSection} from "./NavSection";
@@ -6,8 +6,9 @@ import {
   AiFillDollarCircle,
   GiMoon,
   HiUsers,
-  IoLanguage,
-  MdAccountBox, MdArrowBack,
+  IoLanguage, IoMdCheckmark,
+  MdAccountBox,
+  MdArrowBack,
   MdFeedback,
   MdHelp,
   MdKeyboard,
@@ -17,16 +18,49 @@ import {
   RiLogoutBoxRLine,
   RiShieldUserLine
 } from "react-icons/all";
-import React from "react";
+import React, {useCallback, useContext, useRef, useState} from "react";
 import {IconContext} from "react-icons";
 import {IconButton} from "./IconButton";
+import {useClickOutside} from "@Hooks";
+import {ThemeInfoContext} from "../context/ThemeInfoContext";
+import {UserIcon} from "./UserIcon";
+
+const components = [
+  UserCenterMain,
+  SwitchAcount,
+  Appearance,
+  Language,
+  Location,
+  RestrictedMode
+]
 
 export function UserCenter() {
+  const [currentComponent, setCurrentComponent] = useState<number>(0)
+  const ref = useRef<HTMLDivElement>(null)
+  const clickOutsideHandle = useCallback(() => {
+    setCurrentComponent(0)
+  }, [setCurrentComponent])
+  useClickOutside(ref, clickOutsideHandle)
+  // not fun
   return (
-    <Container>
+    <Container ref={ref}>
+      {components[currentComponent]({setCurrentComponent})}
+    </Container>
+  )
+}
+
+type UserCenterMainPropsT = {
+  setCurrentComponent: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function UserCenterMain({setCurrentComponent}: UserCenterMainPropsT) {
+  return (
+    <>
       <Header>
         <HeaderLeft>
-          <img src='/shirai.jpg'/>
+          <UserIcon>
+            <img src='/shirai.jpg'/>
+          </UserIcon>
         </HeaderLeft>
         <HeaderRight>
           <div>マリア黒田</div>
@@ -38,38 +72,65 @@ export function UserCenter() {
         <IconContext.Provider value={{size: '1.5rem'}}>
           <Menu>
             <NavSection>
-              <MenuItem Icon={MdAccountBox} title='Your channel' to='/not-implemented'/>
-              <MenuItem Icon={AiFillDollarCircle} title='Purchase and memberships' to='/not-implemented'/>
-              <MenuItem Icon={MdSettings} title='YouTube Studio' to='/not-implemented'/>
-              <MenuItem Icon={HiUsers} title='Switch account' to='/not-implemented' TrailIcon={MdKeyboardArrowRight}/>
-              <MenuItem Icon={RiLogoutBoxRLine} title='Sign out' to='/not-implemented'/>
+              <MenuItem Icon={MdAccountBox} title='Your channel'/>
+              <MenuItem Icon={AiFillDollarCircle} title='Purchase and memberships'/>
+              <MenuItem Icon={MdSettings} title='YouTube Studio'/>
+              <MenuItem Icon={HiUsers} title='Switch account'
+                        TrailIcon={MdKeyboardArrowRight}
+                        onClick={() => {
+                          setCurrentComponent(1)
+                        }}
+              />
+              <MenuItem Icon={RiLogoutBoxRLine} title='Sign out'/>
             </NavSection>
             <hr/>
             <NavSection>
-              <MenuItem Icon={GiMoon} title='Appearance: Light' to='/not-implemented' TrailIcon={MdKeyboardArrowRight}/>
-              <MenuItem Icon={IoLanguage} title='Language: English' to='/not-implemented' TrailIcon={MdKeyboardArrowRight}/>
-              <MenuItem Icon={MdLanguage} title='Location: United States' to='/not-implemented' TrailIcon={MdKeyboardArrowRight}/>
-              <MenuItem Icon={MdSettings} title='Settings' to='/not-implemented'/>
-              <MenuItem Icon={RiShieldUserLine} title='Your data in YouTube' to='/not-implemented'/>
-              <MenuItem Icon={MdHelp} title='Help' to='/not-implemented'/>
-              <MenuItem Icon={MdFeedback} title='Send feedback' to='https://github.com/kurodamaria/youtube-clone/issues'/>
-              <MenuItem Icon={MdKeyboard} title='Keyboard shortcuts ' to='/not-implemented'/>
+              <MenuItem Icon={GiMoon} title='Appearance: Light'
+                        TrailIcon={MdKeyboardArrowRight}
+                        onClick={() => {
+                          setCurrentComponent(2)
+                        }}
+              />
+              <MenuItem Icon={IoLanguage}
+                        title='Language: English'
+                        TrailIcon={MdKeyboardArrowRight}
+                        onClick={() => {
+                          setCurrentComponent(3)
+                        }}
+              />
+              <MenuItem Icon={MdLanguage}
+                        title='Location: United States'
+                        TrailIcon={MdKeyboardArrowRight}
+                        onClick={() => {
+                          setCurrentComponent(4)
+                        }}
+              />
+              <MenuItem Icon={MdSettings} title='Settings'/>
+              <MenuItem Icon={RiShieldUserLine} title='Your data in YouTube'/>
+              <MenuItem Icon={MdHelp} title='Help'/>
+              <MenuItem Icon={MdFeedback} title='Send feedback'/>
+              <MenuItem Icon={MdKeyboard} title='Keyboard shortcuts '/>
             </NavSection>
             <hr/>
             <NavSection>
-              <MenuItem title='Restricted Mode: Off' to='/not-implemented' TrailIcon={MdKeyboardArrowRight}/>
+              <MenuItem title='Restricted Mode: Off'
+                        TrailIcon={MdKeyboardArrowRight}
+                        onClick={() => {
+                          setCurrentComponent(5)
+                        }}
+              />
             </NavSection>
           </Menu>
         </IconContext.Provider>
       </Body>
-    </Container>
+    </>
   )
 }
 
 const Container = styled.div`
   position: fixed;
   z-index: var(--user-center-z-index);
-  top: 0;
+  top: 8px;
   right: 76px;
   width: 300px;
   border: 1px solid hsl(0, 0%, 80%);
@@ -87,18 +148,10 @@ const Header = styled.div`
 const HeaderLeft = styled.div`
   display: flex;
   align-items: flex-start;
-  width: 40px;
-  height: 40px;
   flex-basis: 40px;
   flex-grow: 0;
   flex-shrink: 0;
   margin-right: 1rem;
-
-  & > img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-  }
 `
 
 const HeaderRight = styled.div`
@@ -124,19 +177,139 @@ const Body = styled.div`
 `
 
 type SubMenuPropsT = {
-
+  title: string;
+  children: React.ReactNode;
+  setCurrentComponent: React.Dispatch<React.SetStateAction<number>>;
 }
-function SubMenu() {
 
+function SubMenu(props: SubMenuPropsT): JSX.Element {
+  return (
+    <>
+      <SubMenuHeader>
+        <BackIconButton onClick={() => {
+          props.setCurrentComponent(0)
+        }}/>
+        <div>{props.title}</div>
+      </SubMenuHeader>
+      <hr/>
+      <Body>
+        {props.children}
+      </Body>
+    </>
+  )
 }
 
 const SubMenuHeader = styled.div`
-  width: 49px;
-  display: flex; 
+  height: 49px;
+  display: flex;
   justify-content: flex-start;
+  align-items: center;
+  & > div {
+    font-size: 1rem;
+    line-height: 1.375em;
+  }
 `
 
 const BackIconButton = styled(IconButton).attrs({Icon: MdArrowBack, iconSize: '1.5rem'})`
-  height: 2.75rem;
-  width: 2.75rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  margin: 0 4px;
 `
+
+type CSubMenuPropsT = {
+  setCurrentComponent: React.Dispatch<React.SetStateAction<number>>;
+}
+const Desc = styled.div`
+  height: 40px;  
+  margin-left: 1rem;
+  font-size: 0.75rem;
+  line-height: 1.5em;
+  display: flex;
+  align-items: center;
+`
+
+const NoImplementContainer = styled.div`
+  padding: 2rem;
+  font-size: 0.875rem;
+`
+function SwitchAcount(props: CSubMenuPropsT) {
+  return (
+    <SubMenu title='Switch account' setCurrentComponent={props.setCurrentComponent}>
+      <Desc>Not Implemented</Desc>
+    </SubMenu>
+  )
+}
+
+const CheckmarkPlaceholder = styled.div`
+  height: 1rem;
+  width: 1rem;
+  margin-right: 1rem;
+`
+function Appearance(props: CSubMenuPropsT) {
+  const {currentTheme, setCurrentTheme} = useContext(ThemeInfoContext)
+  return (
+    <SubMenu title='Appearance' setCurrentComponent={props.setCurrentComponent}>
+      <Menu>
+        <Desc>Settings applies to this browser only</Desc>
+        <NavSection style={{marginTop: '0'}}>
+          <MenuItem
+            Icon={currentTheme === 'system' ? IoMdCheckmark : CheckmarkPlaceholder}
+            title='Use device theme'
+            onClick={() => {setCurrentTheme('system')}}
+          />
+          <MenuItem
+            Icon={currentTheme === 'dark' ? IoMdCheckmark : CheckmarkPlaceholder}
+            title='Dark theme'
+            onClick={() => {setCurrentTheme('dark')}}
+          />
+          <MenuItem
+            Icon={currentTheme === 'light' ? IoMdCheckmark : CheckmarkPlaceholder}
+            title='Light theme'
+            onClick={() => {setCurrentTheme('light')}}
+          />
+        </NavSection>
+      </Menu>
+    </SubMenu>
+  )
+}
+
+function Language(props: CSubMenuPropsT) {
+  return (
+    <SubMenu title='Choose your language' setCurrentComponent={props.setCurrentComponent}>
+      <Menu>
+        <NavSection>
+          <MenuItem title='English (US)'/>
+          <MenuItem title='Chinese (Simplified)'/>
+        </NavSection>
+      </Menu>
+    </SubMenu>
+  )
+}
+
+function Location(props: CSubMenuPropsT) {
+  return (
+    <SubMenu title='Choose your location' setCurrentComponent={props.setCurrentComponent}>
+      <Menu>
+        <NavSection>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+          <MenuItem title='United States'/>
+        </NavSection>
+      </Menu>
+    </SubMenu>
+  )
+}
+
+function RestrictedMode(props: CSubMenuPropsT) {
+  return (
+    <SubMenu title='Restricted Mode' setCurrentComponent={props.setCurrentComponent}>
+      <Desc>Fuck the restrict mode, I'll never implement this.</Desc>
+    </SubMenu>
+  )
+}

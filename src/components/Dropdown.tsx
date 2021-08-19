@@ -23,7 +23,6 @@ export function Dropdown({children, direction='left'}: DropdownMenuPropsT): JSX.
   return (
     <DropdownMenuContainer ref={ref}>
       <DropdownMenuToggleContainer onClick={(ev) => {
-        console.log(ev)
         setShow(!show)
       }}>
         {children[0]}

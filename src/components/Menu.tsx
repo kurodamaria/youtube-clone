@@ -1,7 +1,6 @@
-import {IconContext, IconType} from "react-icons";
+import {IconType} from "react-icons";
 import styled from "styled-components";
 import React from "react";
-import {Link} from "react-router-dom";
 
 type MenuPropsT = {
   children: React.ReactNode;
@@ -28,19 +27,16 @@ type MenuItemPropsT = {
   Icon?: IconType;
   TrailIcon?: IconType;
   title: string;
-  to: string;
   noActive?: boolean;
 }
 
 export function MenuItem(props: MenuItemPropsT): JSX.Element {
   return (
-    <Link to={props.to}>
-      <MenuItemContainer onClick={props.onClick}>
-        {props.Icon ? <props.Icon/> : <></>}
-        <span>{props.title}</span>
-        {props.TrailIcon ? <props.TrailIcon/> : <></>}
-      </MenuItemContainer>
-    </Link>
+    <MenuItemContainer onClick={props.onClick}>
+      {props.Icon ? <props.Icon/> : <></>}
+      <span>{props.title}</span>
+      {props.TrailIcon ? <props.TrailIcon/> : <></>}
+    </MenuItemContainer>
   )
 }
 
@@ -50,9 +46,11 @@ const MenuItemContainer = styled.div`
   display: flex;
   align-items: center;
   cursor: pointer;
+
   &:hover {
     background-color: ${props => props.theme.colors.menuItemContainer.hover};
   }
+
   &:active {
     background-color: ${props => props.theme.colors.clickable.activeBg};
   }
@@ -60,10 +58,12 @@ const MenuItemContainer = styled.div`
   & > svg:nth-child(1) {
     margin-right: 1rem;
   }
+
   & > svg:nth-child(2) {
-    margin-left: 1rem; 
+    margin-left: 1rem;
     margin-right: -1rem; // just for now... i will come up a more .. ok solution
   }
+
   & > svg:nth-child(3) {
     margin-left: 1rem;
     margin-right: -1rem; // just for now... i will come up a more .. ok solution
