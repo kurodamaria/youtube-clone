@@ -32,12 +32,6 @@ export const HomeContentContainer = styled.div`
   width: 100%;
   // relative to this container
   grid-template-columns: repeat(var(--items-per-row), calc((100% - var(--items-per-row) * 1em + 1em) / var(--items-per-row)));
-  border: 1px solid red;
-`
-
-const FakeContent = styled.div`
-  height: 300px;
-  background-color: lightblue;
 `
 
 export function HomeContent() {

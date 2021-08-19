@@ -9,19 +9,29 @@ type IconButtonPropsT = {
   color?: string;
   Icon: IconType;
   onClick?: (ev: React.MouseEvent<HTMLButtonElement> | undefined) => void;
+  onMouseDown?: (ev: React.MouseEvent<HTMLButtonElement> | undefined) => void;
+  onMouseUp?: (ev: React.MouseEvent<HTMLButtonElement> | undefined) => void;
   className?: string;
   style?: React.CSSProperties;
 }
 
 const IconButtonCore = (
   {
-    iconSize = '1em', color = 'undefined', onClick = () => {
-  }, Icon,
-    className = '', style = {}
+    iconSize = '1em',
+    color = 'undefined',
+    onMouseDown = () => {
+    },
+    onMouseUp = () => {
+    },
+    onClick = () => {
+    },
+    Icon,
+    className = '',
+    style = {}
   }: IconButtonPropsT
 ) => {
   return (
-    <button onClick={onClick} className={className} style={style}>
+    <button onClick={onClick} onMouseUp={onMouseUp} onMouseDown={onMouseDown} className={className} style={style}>
       <IconContext.Provider value={{color: color, size: iconSize, style: {verticalAlign: 'middle'}}}>
         <Icon/>
       </IconContext.Provider>
@@ -39,8 +49,8 @@ export const IconButton = styled(IconButtonCore)`
   padding: 0 0;
   border-radius: 50%;
   cursor: pointer;
-  
+
   &:active {
-    
+
   }
 `
