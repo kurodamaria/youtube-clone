@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import {useContext} from "react";
 import {HomeContentFilterContext} from "../context/HomeContentFilterContext";
-import {VideoCard} from "./VideoCard";
+import {Fetch} from "./Fetch";
+import {MapToVideoCards} from "../helpers/MapToVideoCards";
 
 export const HomeContentContainer = styled.div`
   max-width: 2256px;
@@ -34,14 +35,20 @@ export const HomeContentContainer = styled.div`
   grid-template-columns: repeat(var(--items-per-row), calc((100% - var(--items-per-row) * 1em + 1em) / var(--items-per-row)));
 `
 
+function Render({data}: { data: any }) {
+  return (
+    <MapToVideoCards data={data}/>
+  )
+}
+
 export function HomeContent() {
   const filterContext = useContext(HomeContentFilterContext)
   return (
     <HomeContentContainer>
-      CurrentFilter: {filterContext.filters[filterContext.currentFilter]}
-      {
-        [...Array(23)].map((_, i) => <VideoCard/>)
-      }
+      <Fetch
+        uri={`https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&type=video&q=${filterContext.filters[filterContext.currentFilter]}&key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA`}
+        Render={Render}
+      />
     </HomeContentContainer>
   )
 }

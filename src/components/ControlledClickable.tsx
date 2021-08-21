@@ -1,5 +1,11 @@
 import styled, {css} from "styled-components";
-import React, {useState} from "react";
+import React, {createContext, useContext, useState} from "react";
+
+type ControlledClickableContextT = {
+ stop: boolean;
+}
+
+export const ControlledClickableContext = createContext<ControlledClickableContextT>({stop: false})
 
 type ControlledClickableWrapperPropsT = {
   play: boolean;
@@ -19,7 +25,6 @@ const ControlledClickableWrapper = styled.div<ControlledClickableWrapperPropsT>`
   }
 `
 type ControlledClickableContainerPropsT = {
-  stop: boolean;
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -27,18 +32,27 @@ type ControlledClickableContainerPropsT = {
 
 // So if you want to stop the clickable style
 // handle the onMouseDown and prevent it from propagation
+// or
+// provide the ControlledClickableContext with {stop: true}
 // For simple apply and forget click effect
 // check src/styles/ClickableCss.ts
 function _ControlledClickableContainer(props: ControlledClickableContainerPropsT) {
   const [isMouseDown, setIsMouseDown] = useState<boolean>(false)
+  const {stop} = useContext(ControlledClickableContext)
   return (
     <ControlledClickableWrapper
-      play={isMouseDown && !props.stop}
+      play={isMouseDown && !stop}
       onMouseDown={() => {
-        setIsMouseDown(true)
+        if (!stop) {
+          setIsMouseDown(true)
+        }
       }}
       onMouseUp={() => {
         setIsMouseDown(false)
+      }}
+      // just in case, just in case ...
+      onMouseOut={() => {
+       setIsMouseDown(false)
       }}
       className={props.className}
       style={props.style}
@@ -47,5 +61,5 @@ function _ControlledClickableContainer(props: ControlledClickableContainerPropsT
     </ControlledClickableWrapper>
   )
 }
-// yeah, eh, whatever, there is a reason i do this but i don't want to explain
+// yeah, eh, whatever, there is a reason for this
 export const ControlledClickable = styled(_ControlledClickableContainer)``

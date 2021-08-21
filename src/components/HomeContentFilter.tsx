@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useCallback, useContext, useEffect, useLayoutEffect, useRef, useState} from "react";
+import {useCallback, useContext, useRef, useState} from "react";
 import {HomeContentFilterContext} from "../context/HomeContentFilterContext";
 import {IconButton} from "./IconButton";
 import {MdArrowBack, MdArrowForward} from "react-icons/all";
@@ -11,8 +11,10 @@ export function HomeContentFilter() {
   const filterContext = useContext(HomeContentFilterContext)
   const ref = useRef<HTMLDivElement>(null!)
   const resizeHandle = useCallback(() => {
-    setShowLeft(ref.current.scrollLeft - scrollX > 0)
-    setShowRight(ref.current.scrollLeft + scrollX + ref.current.clientWidth < ref.current.scrollWidth)
+    if (ref.current) {
+      setShowLeft(ref.current.scrollLeft - scrollX > 0)
+      setShowRight(ref.current.scrollLeft + scrollX + ref.current.clientWidth < ref.current.scrollWidth)
+    }
   }, [])
 
   // BTW this will also set the initial value, because the browser will fire a resize event
@@ -65,7 +67,7 @@ export function HomeContentFilter() {
                 })
                 // 200 is the scroll distance this click, because of the animation the value will be delayed
                 console.log('scrollLeft', ref.current.scrollLeft, 'clientWidth', ref.current.clientWidth)
-                setShowLeft(ref.current.scrollLeft + scrollX  > 0)
+                setShowLeft(ref.current.scrollLeft + scrollX > 0)
                 setShowRight(ref.current.scrollLeft + scrollX + ref.current.clientWidth < ref.current.scrollWidth)
               }}/>
             </ControllerContainer>
@@ -77,7 +79,7 @@ export function HomeContentFilter() {
 
 const Container = styled.div`
   position: sticky;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   left: 0;
   right: 0;

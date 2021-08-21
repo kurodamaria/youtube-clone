@@ -1,12 +1,13 @@
-import styled, {ThemeContext} from "styled-components";
-import {NativeLink} from "./NativeLink";
+import styled from "styled-components";
+import {BlueLink} from "./BlueLink";
 import {Menu, MenuItem} from "./Menu";
 import {NavSection} from "./NavSection";
 import {
   AiFillDollarCircle,
   GiMoon,
   HiUsers,
-  IoLanguage, IoMdCheckmark,
+  IoLanguage,
+  IoMdCheckmark,
   MdAccountBox,
   MdArrowBack,
   MdFeedback,
@@ -59,12 +60,12 @@ function UserCenterMain({setCurrentComponent}: UserCenterMainPropsT) {
       <Header>
         <HeaderLeft>
           <UserIcon>
-            <img src='/shirai.jpg'/>
+            <img src='/shirai.jpg' alt='usericon'/>
           </UserIcon>
         </HeaderLeft>
         <HeaderRight>
           <div>マリア黒田</div>
-          <NativeLink to='/not-implemented'>Manage your Google Account</NativeLink>
+          <BlueLink to='/not-implemented'>Manage your Google Account</BlueLink>
         </HeaderRight>
       </Header>
       <hr/>
@@ -204,6 +205,7 @@ const SubMenuHeader = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+
   & > div {
     font-size: 1rem;
     line-height: 1.375em;
@@ -220,7 +222,7 @@ type CSubMenuPropsT = {
   setCurrentComponent: React.Dispatch<React.SetStateAction<number>>;
 }
 const Desc = styled.div`
-  height: 40px;  
+  height: 40px;
   margin-left: 1rem;
   font-size: 0.75rem;
   line-height: 1.5em;
@@ -228,10 +230,6 @@ const Desc = styled.div`
   align-items: center;
 `
 
-const NoImplementContainer = styled.div`
-  padding: 2rem;
-  font-size: 0.875rem;
-`
 function SwitchAcount(props: CSubMenuPropsT) {
   return (
     <SubMenu title='Switch account' setCurrentComponent={props.setCurrentComponent}>
@@ -245,6 +243,7 @@ const CheckmarkPlaceholder = styled.div`
   width: 1rem;
   margin-right: 1rem;
 `
+
 function Appearance(props: CSubMenuPropsT) {
   const {currentTheme, setCurrentTheme} = useContext(ThemeInfoContext)
   return (
@@ -255,17 +254,23 @@ function Appearance(props: CSubMenuPropsT) {
           <MenuItem
             Icon={currentTheme === 'system' ? IoMdCheckmark : CheckmarkPlaceholder}
             title='Use device theme'
-            onClick={() => {setCurrentTheme('system')}}
+            onClick={() => {
+              setCurrentTheme('system')
+            }}
           />
           <MenuItem
             Icon={currentTheme === 'dark' ? IoMdCheckmark : CheckmarkPlaceholder}
             title='Dark theme'
-            onClick={() => {setCurrentTheme('dark')}}
+            onClick={() => {
+              setCurrentTheme('dark')
+            }}
           />
           <MenuItem
             Icon={currentTheme === 'light' ? IoMdCheckmark : CheckmarkPlaceholder}
             title='Light theme'
-            onClick={() => {setCurrentTheme('light')}}
+            onClick={() => {
+              setCurrentTheme('light')
+            }}
           />
         </NavSection>
       </Menu>

@@ -1,30 +1,54 @@
 import styled from "styled-components";
 import {IconButton} from "./IconButton";
-import {MdNotifications, MdSettings} from "react-icons/all";
+import {IoMdTrash, MdWatchLater} from "react-icons/all";
 import {IconContext} from "react-icons";
-import {Link} from 'react-router-dom';
-import {ButtonLink} from "./ButtonLink";
+import {useContext} from "react";
+import {WatchLaterContext} from "../context/WatchLaterContext";
 
-export function Notifications() {
+function Empty() {
+  return <>
+    <IconContext.Provider value={{
+      size: "7.5rem",
+      style: {color: "hsl(0, 0%, 80%)", marginBottom: "1.5rem", minWidth: "7.5rem", minHeight: "7.5rem"}
+    }}>
+      <MdWatchLater/>
+    </IconContext.Provider>
+    <strong>
+      Add some videos to the queue
+    </strong>
+    <p>
+      Click add to queue to add videos to here and watch later.
+    </p>
+  </>;
+}
+
+function WatchLaters() {
+  const {list} = useContext(WatchLaterContext)
+  return (
+    <div>
+      {
+        list.map(vid => <div>{vid}</div>)
+      }
+    </div>
+  )
+}
+
+export function WatchLater() {
+  const {list} = useContext(WatchLaterContext)
+  console.log(list)
   return (
     <Container>
       <Header>
-        <span>Notifications</span>
-        <ButtonLink to='/not-implemented'>
-          <SettingsIcon/>
-        </ButtonLink>
+        <span>Videos to watch</span>
+        <DeleteAllIcon/>
       </Header>
       <hr/>
       <Body>
-        <IconContext.Provider value={{size: '7.5rem', style: {color: 'hsl(0, 0%, 80%)', marginBottom: '1.5rem', minWidth: '7.5rem', minHeight: '7.5rem'}}}>
-          <MdNotifications/>
-        </IconContext.Provider>
-        <strong>
-          Your notifications lives here
-        </strong>
-        <p>
-          Subscribe to you favorite channel to get notified about their latest videos.
-        </p>
+        {
+          list.length === 0
+            ? <Empty/>
+            : <WatchLaters/>
+        }
       </Body>
     </Container>
   )
@@ -79,7 +103,7 @@ const Body = styled.div`
   }
 `
 
-const SettingsIcon = styled(IconButton).attrs({iconSize: '1.5rem', Icon: MdSettings})`
+const DeleteAllIcon = styled(IconButton).attrs({iconSize: '1.5rem', Icon: IoMdTrash})`
   height: 2.5rem;
   width: 2.5rem;
 `

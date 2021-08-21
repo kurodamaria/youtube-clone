@@ -1,34 +1,54 @@
 import styled, {css} from "styled-components";
-import React, {useCallback, useRef, useState} from "react";
+import React, {useCallback, useLayoutEffect, useRef, useState} from "react";
 import {useClickOutside} from "@Hooks";
 
 // First child is the toggle
 // Second child is body
 type DropdownMenuPropsT = {
   children: [React.ReactNode, React.ReactNode];
-  // left: right: 0;
-  // right: left: 0;
-  direction?: 'left' | 'right'
+  onShow?: () => void;
+  onDismiss?: () => void;
 }
 
-export function Dropdown({children, direction='left'}: DropdownMenuPropsT): JSX.Element {
+export function Dropdown(props: DropdownMenuPropsT): JSX.Element {
   const [show, setShow] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const [direction, setDirection] = useState<'left' | 'right'>('right')
+  const bodyRef = useRef<HTMLDivElement>(null)
   // outside means .. not a descendant of the ref.current
   // so click the dropdown body won't dismiss the dropdown
   const clickOutsideHandle = useCallback(() => {
     setShow(false)
-  }, [])
+    if (props.onDismiss) {
+      props.onDismiss()
+    }
+  }, [props])
+
   useClickOutside(ref, clickOutsideHandle)
+  useLayoutEffect(() => {
+    if (show) {
+      if (bodyRef.current) {
+        const rect = bodyRef.current.getBoundingClientRect()
+        if (rect.x + rect.width > window.innerWidth) {
+          setDirection('left')
+        }
+      }
+    }
+  }, [show])
   return (
     <DropdownMenuContainer ref={ref}>
       <DropdownMenuToggleContainer onClick={(ev) => {
+        if (!show && props.onShow) {
+          props.onShow()
+        } else if (props.onDismiss) {
+          props.onDismiss()
+        }
         setShow(!show)
       }}>
-        {children[0]}
+        {props.children[0]}
       </DropdownMenuToggleContainer>
-      <DropdownMenuBodyContainer show={show} direction={direction}>
-        {children[1]}
+      <DropdownMenuBodyContainer ref={bodyRef} show={show} direction={direction}>
+        {props.children[1]}
       </DropdownMenuBodyContainer>
     </DropdownMenuContainer>
   )
@@ -50,9 +70,9 @@ type DropdownMenuBodyContainerPropsT = {
 const DropdownMenuBodyContainer = styled.div<DropdownMenuBodyContainerPropsT>`
   position: absolute;
   ${
-    props => props.direction === 'left'
-    ? css`right: 0;`
-    : css`left: 0;`
+          props => props.direction === 'left'
+                  ? css`right: 0;`
+                  : css`left: 0;`
   }
   display: ${props => props.show ? 'flex' : 'none'};
   flex-direction: column;

@@ -8,9 +8,9 @@ import {
   MdArrowBack,
   MdKeyboardVoice,
   MdMenu,
-  MdNotifications,
   MdSearch,
-  MdVideoCall
+  MdVideoCall,
+  MdWatchLater
 } from "react-icons/all";
 import {useClickOutside} from "@Hooks";
 import {checkMedia} from "@Helpers";
@@ -21,9 +21,10 @@ import {Menu, MenuItem} from "./Menu";
 import {NavSection} from "./NavSection";
 import {Link} from "react-router-dom";
 import {SearchWithVoiceDialog} from "./SearchWithVoiceDialog";
-import {Notifications} from "./Notifications";
+import {WatchLater} from "./WatchLater";
 import {UserCenter} from "./UserCenter";
 import {IconContext} from "react-icons";
+import {FlexContainerLink} from "./Links";
 
 type HeaderContextT = {
   showInput: boolean;
@@ -156,13 +157,16 @@ const HeaderCenterContainer = styled.div<HeaderXContainerPropsT>`
   }
 `
 
-
 function HeaderCenterSearchForm() {
   const {setShowInput} = useContext(HeaderContext)
+  const inputRef = useRef<HTMLInputElement>(null!)
   return (
-    <HeaderCenterSearchFormContainer action="undefined">
+    <HeaderCenterSearchFormContainer action="/search" onSubmit={(ev) => {
+      ev.preventDefault()
+    }}>
       <input type='text'
              placeholder='Search'
+             ref={inputRef}
              onFocus={() => {
                setShowInput(true)
              }}
@@ -172,7 +176,13 @@ function HeaderCenterSearchForm() {
                }
              }}
       />
-      <HeaderCenterSearchFormIconButton Icon={MdSearch}/>
+      <FlexContainerLink to={`/search/${inputRef.current?.value}`} onClick={(ev) => {
+        if (!inputRef.current.value) {
+          ev.preventDefault()
+        }
+      }}>
+        <HeaderCenterSearchFormIconButton Icon={MdSearch}/>
+      </FlexContainerLink>
     </HeaderCenterSearchFormContainer>
   )
 }
@@ -215,11 +225,11 @@ const HeaderStartBrandLink = styled(Link)`
 
 function HeaderCenter() {
   const {showInput, setShowInput} = useContext(HeaderContext)
-  const {showVoiceSearch, setShowVoiceSearch} = useContext(VoiceSearchContext)
+  const {setShowVoiceSearch} = useContext(VoiceSearchContext)
   const ref = useRef<HTMLDivElement>(null)
   const clickOutsideHandle = useCallback(() => {
     setShowInput(false)
-  }, [])
+  }, [setShowInput])
   useClickOutside(ref, clickOutsideHandle)
   return (
     <HeaderCenterContainer showInput={showInput} ref={ref}>
@@ -249,7 +259,7 @@ function HeaderEnd() {
   const {showInput} = useContext(HeaderContext)
   return (
     <HeaderEndContainer showInput={showInput}>
-      <Dropdown direction='right'>
+      <Dropdown>
         <HeaderIconButton Icon={MdVideoCall}/>
         <IconContext.Provider value={headerDropdownMenuIconContext}>
           <Menu>
@@ -296,8 +306,8 @@ function HeaderEnd() {
         </IconContext.Provider>
       </Dropdown>
       <Dropdown>
-        <HeaderIconButton Icon={MdNotifications}/>
-        <Notifications/>
+        <HeaderIconButton Icon={MdWatchLater}/>
+        <WatchLater/>
       </Dropdown>
       <Dropdown>
         <HeaderIconButton Icon={MdAccountCircle}/>

@@ -1,54 +1,108 @@
 import styled from "styled-components";
 import {UserIcon} from "./UserIcon";
 import {Overlay} from "./Overlay";
-import {FaYoutube, MdMoreVert, MdPlaylistPlay, MdVideoCall, MdWatchLater} from "react-icons/all";
+import {AiOutlineStop, MdFlag, MdMoreVert, MdPlaylistAdd, MdWatchLater} from "react-icons/all";
 import {IconContext, IconType} from "react-icons";
 import {IconButton} from "./IconButton";
-import {ControlledClickable} from "./ControlledClickable";
-import React, {createContext, useContext, useState} from "react";
+import React, {useContext} from "react";
 import {Dropdown} from "./Dropdown";
 import {Menu, MenuItem} from "./Menu";
 import {NavSection} from "./NavSection";
-import {Link} from "react-router-dom";
-
-type VideoCardContextT = {
-  stop: boolean;
-  setStop: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const VideoCardContext = createContext({} as VideoCardContextT)
+import {Fetch} from "./Fetch";
+import {VideoCardContext} from "../context/VideoCardContext";
+import {TransparentLink} from "./TransparentLink";
+import {NormalLink} from "./Links";
+import {WatchLaterContext} from "../context/WatchLaterContext";
 
 export function VideoCard(): JSX.Element {
-  const [stop, setStop] = useState(false)
+  const videoCardContext = useContext(VideoCardContext)
   return (
-    <VideoCardContext.Provider value={{stop, setStop}}>
-      <Container stop={stop} orientation='row'>
-        <ThumbnailContainer>
-          <Thumbnail src='/shirai.jpg'/>
-          <Overlay top='5px' right='5px' bottom='' left=''>
-            <VideoCardHoverAction Icon={MdWatchLater} tip='watch later'/>
-            <VideoCardHoverAction Icon={MdPlaylistPlay} tip='add to queue'/>
-          </Overlay>
-        </ThumbnailContainer>
-        <Details/>
-      </Container>
-    </VideoCardContext.Provider>
-
-
+    <VideoCardContainer to={`/watch/${videoCardContext.videoId}`}>
+      <ThumbnailContainer>
+        <Thumbnail src={videoCardContext.thumbnail}/>
+        <Overlay top='5px' right='5px' bottom='' left=''>
+          <VideoCardHoverAction Icon={MdWatchLater}
+                                tip='watch later'
+                                onClick={(ev) => {
+                                  ev.preventDefault()
+                                  ev.stopPropagation()
+                                }}
+          />
+        </Overlay>
+      </ThumbnailContainer>
+      <Details/>
+    </VideoCardContainer>
   )
 }
-type ContainerPropsT = {
-  orientation: 'column' | 'row';
+
+function MoreVertOverlay() {
+  const watchLaterContext = useContext(WatchLaterContext)
+  const videoCardContext = useContext(VideoCardContext)
+  return (
+    <Overlay left='' bottom='' top='0.3em' right='0'>
+      <Dropdown onShow={() => {
+      }} onDismiss={() => {
+      }}>
+        <IconButton
+          Icon={MdMoreVert}
+          iconSize='1.5rem'
+          onMouseDown={(ev) => {
+            ev?.stopPropagation()
+          }}
+          onClick={(ev) => {
+            // prevent from redirecting
+            ev?.preventDefault()
+            ev?.stopPropagation()
+          }}
+        />
+        <IconContext.Provider value={{size: '1.5rem'}}>
+          <Menu>
+            <NavSection>
+              <MenuItem Icon={MdWatchLater}
+                        title={watchLaterContext.list.includes(videoCardContext.videoId) ? 'Remove from watch later' : 'Add to watch later'}
+                        onClick={() => {
+                          if (watchLaterContext.list.includes(videoCardContext.videoId)) {
+                            watchLaterContext.setList(watchLaterContext.list.filter(vid => vid !== videoCardContext.videoId))
+                          } else {
+                            watchLaterContext.setList([...watchLaterContext.list, videoCardContext.videoId])
+                          }
+                        }}/>
+              <MenuItem Icon={MdPlaylistAdd} title='Save to playlist'/>
+            </NavSection>
+            <hr/>
+            <NavSection>
+              <MenuItem Icon={AiOutlineStop} title='Not interested'/>
+              <MenuItem Icon={AiOutlineStop} title="Don't recommend channel"/>
+              <MenuItem Icon={MdFlag} title='Report'/>
+            </NavSection>
+          </Menu>
+        </IconContext.Provider>
+      </Dropdown>
+    </Overlay>
+  )
 }
-const Container = styled(ControlledClickable)<ContainerPropsT>`
+
+const ThumbnailContainer = styled.div`
   position: relative;
+`
+const VideoCardContainer = styled(TransparentLink)`
   cursor: pointer;
   display: flex;
-  flex-direction: ${props => props.orientation};
+  flex-direction: column;
   padding: 0.3em 0.3em;
   border-radius: 0.2em;
 
+  position: relative;
+
+  ${IconButton} {
+    background-color: transparent;
+  }
+
   ${Overlay} {
+    z-index: 1;
+  }
+
+  ${Overlay}:first-of-type {
     display: none;
   }
 
@@ -59,34 +113,31 @@ const Container = styled(ControlledClickable)<ContainerPropsT>`
   ${Overlay} > * + * {
     margin-top: 0.3em;
   }
-`
 
-const ThumbnailContainer = styled.div`
-  position: relative;
+  ${IconButton} {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
 `
 
 const Thumbnail = styled.img`
   width: 100%;
 `
 
-// It's a button
-// when clicked, that does something
-// when hovered over 0.2s, that shows its tooltip
-
 type VideoCardHoverActionPropsT = {
   Icon: IconType;
   tip: string;
-  onClick?: () => void;
+  onClick?: (() => void) | ((ev: React.MouseEvent<HTMLDivElement>) => void);
 }
 
 function VideoCardHoverAction(props: VideoCardHoverActionPropsT) {
-  const {setStop} = useContext(VideoCardContext)
   return (
-    <VideoCardHoverActionContainer onClick={props.onClick} onMouseUp={() => {
-      setStop(false)
-    }} onMouseDown={() => {
-      setStop(true)
-    }}>
+    <VideoCardHoverActionContainer onClick={props.onClick}
+                                   onMouseDown={(ev) => {
+                                     ev?.stopPropagation()
+                                     ev?.preventDefault()
+                                   }}
+    >
       <div>
         <IconContext.Provider value={{size: '1rem', style: {color: 'hsl(0, 0%, 100%)', verticalAlign: 'middle'}}}>
           <props.Icon/>
@@ -100,6 +151,7 @@ function VideoCardHoverAction(props: VideoCardHoverActionPropsT) {
 const VideoCardHoverActionContainer = styled.div`
   position: relative;
   display: flex;
+  cursor: pointer;
 
   & > div {
     background-color: hsl(0, 0%, 0%);
@@ -134,18 +186,20 @@ const VideoCardHoverActionContainer = styled.div`
   }
 `
 
-type DetailsPropsT = {
-  slim?: boolean;
-}
+const UserIconRender = ({data}: { data: any }) =>
+  <UserIcon>
+    <img src={data.items[0].snippet.thumbnails.default.url} alt='cover'/>
+  </UserIcon>
 
-function Details({slim = false}: DetailsPropsT): JSX.Element {
+function Details(): JSX.Element {
+  const {channelId} = useContext(VideoCardContext)
   return (
     <DetailsContainer>
       {
-        slim ? null
-          : <UserIcon>
-            <img src='shirai.jpg'/>
-          </UserIcon>
+        <Fetch
+          uri={`https://youtube.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA`}
+          Render={UserIconRender}
+        />
       }
       <Meta/>
     </DetailsContainer>
@@ -177,52 +231,25 @@ const MetaContainer = styled.div`
 `
 
 function Meta(): JSX.Element {
-  const {setStop} = useContext(VideoCardContext)
+  const {title, channelId, channelTitle} = useContext(VideoCardContext)
   return (
     <MetaContainer>
-      <MetaTitle title='hello world'>[Akhtar Walk in Tokyo] Moe Moe Kyun Kyun Street Walk ♪ (4K ASMR Nonstop 1 hour
-        01 minutes)</MetaTitle>
+      <MetaTitle title={title}>{title}</MetaTitle>
       <MetaChannelAndViews>
-        <div>Channel</div>
+        <NormalLink to={`/channel/${channelId}`}>{channelTitle}</NormalLink>
         <div>27k views•19 hours ago</div>
       </MetaChannelAndViews>
-      <Overlay left='' bottom='' top='8px' right='-1rem'>
-        <Dropdown direction='right'>
-          <IconButton
-            Icon={MdMoreVert}
-            iconSize='1.5rem'
-            onMouseDown={() => {
-              setStop(true)
-            }}
-            onMouseUp={() => {
-              setStop(false)
-            }}
-          />
-          <IconContext.Provider value={{size: '1rem'}}>
-            <Menu>
-              <NavSection>
-                <Link to='/not-implemented'>
-                  <MenuItem Icon={FaYoutube} title='Upload video'/>
-                </Link>
-                <Link to='/not-implemented'>
-                  <MenuItem Icon={FaYoutube} title='Go live'/>
-                </Link>
-              </NavSection>
-            </Menu>
-          </IconContext.Provider>
-        </Dropdown>
-      </Overlay>
+      <MoreVertOverlay/>
     </MetaContainer>
   )
 }
 
 const MetaTitle = styled.div`
-  font-size: 0.875rem;
-  line-height: 1.25em;
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
   text-align: start;
-
+  margin-top: 0.75em;
+  margin-bottom: 0.5em;
+  line-height: 1.25em;
+  font-size: 0.875rem;
   // support for two line overflow with ellipsis like magic :(
   max-height: 2.5em;
   overflow: hidden;

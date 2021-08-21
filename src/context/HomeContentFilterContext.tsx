@@ -1,11 +1,10 @@
 import React, {createContext, useState} from "react";
 
 const filters = [
-  'All', 'Music', 'Lofi music', 'Background music', 'Pixel art',
+  'ギャルゲ/エロゲソング', 'Lofi music', 'Background music', 'Pixel art',
   'Playlists', 'Computer programming', 'Anime', 'Science', 'Art',
-  'Live', 'Electronic dance music', 'J-Pop', 'Theme music', 'Illustrations',
-  'Music', 'Wacom', 'Computers', 'Action-adventure games', 'Recently uploaded',
-  'New to you'
+  'Live', 'Electronic dance music', 'J-Pop', 'Illustrations',
+  'Computers', 'JRPG', 'New to you'
 ]
 
 type HomeContentFilterContextT = {

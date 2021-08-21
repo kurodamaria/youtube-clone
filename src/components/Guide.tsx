@@ -4,21 +4,7 @@ import {GuideContext} from "@Context";
 import {useContext} from "react";
 import {NavSection, SectionTitle} from "./NavSection";
 import {GuideNavItem} from "./GuideNavItem";
-import {
-  FiRadio,
-  GiHanger,
-  IoMdTrophy,
-  MdExplore,
-  MdGames,
-  MdHistory,
-  MdHome,
-  MdLightbulbOutline,
-  MdPlaylistPlay,
-  MdSubscriptions,
-  MdVideoLibrary,
-  MdWatchLater,
-  RiVideoLine
-} from "react-icons/all";
+import {MdHistory, MdHome, MdSubscriptions, MdWatchLater} from "react-icons/all";
 import {ModalBlock} from "./ModalBlock";
 
 // A Drawer contains many links to different parts of the site.
@@ -30,43 +16,54 @@ export function Guide(): JSX.Element {
         <HeaderStart/>
         <AssholeHr/>
         <NavContainer>
+          <hr/>
           <NavSection>
             <GuideNavItem Icon={MdHome} desc='Home' href='/'/>
-            <GuideNavItem Icon={MdExplore} desc='Explore' href='/explore'/>
             <GuideNavItem Icon={MdSubscriptions} desc='Subscriptions' href='/subscriptions'/>
-          </NavSection>
-          <hr/>
-          <NavSection>
-            <GuideNavItem Icon={MdVideoLibrary} desc='Library' href='/library'/>
             <GuideNavItem Icon={MdHistory} desc='History' href='/history'/>
-            <GuideNavItem Icon={RiVideoLine} desc='Your videos' href='/your-videos'/>
             <GuideNavItem Icon={MdWatchLater} desc='Watch Later' href='/watch-later'/>
-            <GuideNavItem Icon={MdPlaylistPlay} desc='Play lists . fetch from server' href='playlists'/>
           </NavSection>
           <hr/>
           <NavSection>
             <SectionTitle>
-              subscriptions
+              Notes
             </SectionTitle>
+            <Desc>
+              Subscriptions, history and watch later are stored in localStorage.
+              <br/>
+              <br/>
+              The site will not work if the api quota exceeds the limitation.
+            </Desc>
           </NavSection>
           <hr/>
           <NavSection>
             <SectionTitle>
-              more from youtube
+              disclaimer
             </SectionTitle>
-            <GuideNavItem Icon={MdGames} desc='Gaming' href='/gaming'/>
-            <GuideNavItem Icon={FiRadio} desc='Live' href='/live'/>
-            <GuideNavItem Icon={GiHanger} desc='Fashion' href='/fashion'/>
-            <GuideNavItem Icon={MdLightbulbOutline} desc='Learning' href='/learning'/>
-            <GuideNavItem Icon={IoMdTrophy} desc='Sports' href='/sports'/>
+            <Desc>
+              I built this website for learning purpose only. Contact me if it violates your rights.
+              <br/>
+              <br/>
+              xfreunion@gmail.com
+            </Desc>
           </NavSection>
           <hr/>
         </NavContainer>
       </GuideContainer>
-      <ModalBlock show={showGuide} onClick={() => {setShowGuide(false)}}/>
+      <ModalBlock show={showGuide} onClick={() => {
+        setShowGuide(false)
+      }}/>
     </>
-    )
+  )
 }
+
+const Desc = styled.div`
+  margin: 1rem 0.5rem 1.5rem 1.5rem;
+  font-size: 0.75rem;
+  line-height: 1.5em;
+  display: flex;
+  align-items: center;
+`
 
 const AssholeHr = styled.hr`
   margin-top: -1px;

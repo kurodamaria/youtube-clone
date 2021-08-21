@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import {useDocumentTitle} from "../hooks/useDocumentTitle";
 
 export function NotImplemented() {
+  useDocumentTitle('Sorry')
   return (
     <Container>
       <img src='/yuru-yuri-kyoko.gif' alt='hehe'/>
@@ -8,6 +10,9 @@ export function NotImplemented() {
       <p>
         This page was not implemented because it is relatively not important
         to the core functionality of the site ;)
+      </p>
+      <p>
+        The Button / Link is there just for the feeling of completeness.
       </p>
     </Container>
 
@@ -28,5 +33,8 @@ const Container = styled.div`
     text-align: center;
     width: 80%;
     display: inline-block;
+    font-size: 1rem;
+    font-weight: lighter;
+    letter-spacing: 1px;
   }
 `

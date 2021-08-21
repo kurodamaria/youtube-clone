@@ -17,8 +17,8 @@ export const GlobalStyle = createGlobalStyle`
     --header-z-index: 1;
     --mini-guide-z-index: var(--header-z-index);
     --modal-block-z-index: calc(var(--header-z-index) + 1);
-    --search-with-voice-z-index: calc(var(--header-z-index) + 2);
     --guide-z-index: calc(var(--header-z-index) + 2);
+    --search-with-voice-z-index: calc(var(--header-z-index) + 3);
     --home-content-filter-height: 56px;
   }
   *,
@@ -57,7 +57,7 @@ export const GlobalStyle = createGlobalStyle`
     text-decoration: none;
   }
   a:link {
-   color: red; 
+   color: hsl(0, 0%, 0%); 
   }
   a:visited {
     color: hsl(0, 0%, 40%);

@@ -4,7 +4,7 @@ import {Spinner} from "./Spinner";
 export function Loading() {
   return (
     <LoadingContainer>
-      <Spinner size='30%'/>
+      <Spinner size='4rem'/>
     </LoadingContainer>
   )
 }

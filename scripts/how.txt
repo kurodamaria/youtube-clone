@@ -4,7 +4,7 @@
    18    61   538 ../src/components/generic_components/Divider.js
    28    62   587 ../src/components/generic_components/IconButton.js
    15    60   423 ../src/components/generic_components/index.js
-   20    32   253 ../src/components/generic_components/LinkButton.js
+   20    32   253 ../src/components/generic_components/TransparentLink.js
     1     4    23 ../src/components/generic_components/list/index.js
    11    24   205 ../src/components/generic_components/list/List.js
     1     4    26 ../src/components/generic_components/loading/index.js

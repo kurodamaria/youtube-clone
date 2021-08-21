@@ -1,5 +1,4 @@
 import styled, {css} from "styled-components";
-import {useDisableBodyScroll} from "@Hooks";
 
 type ModalBlockPropsT = {
   show: boolean;
@@ -7,7 +6,7 @@ type ModalBlockPropsT = {
 }
 
 export function ModalBlock(props: ModalBlockPropsT) {
-  useDisableBodyScroll(props.show)
+  // useDisableBodyScroll(props.show)
   return (
     <Layer show={props.show} onClick={props.onClick}/>
   )

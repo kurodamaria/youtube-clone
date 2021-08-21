@@ -9,12 +9,12 @@ export function useClickOutside(
         if (elRef !== null && !elRef.current?.contains(ev.target as Node)) {
             callback()
         }
-    }, [callback])
+    }, [callback, elRef])
 
     useEffect(() => {
         document.addEventListener('click', handler, true)
         return () => {
             document.removeEventListener('click', handler, true)
         }
-    }, [callback])
+    }, [callback, handler])
 }
