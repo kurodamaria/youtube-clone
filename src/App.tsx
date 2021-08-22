@@ -1,21 +1,20 @@
 import {Guide, Header, MiniGuide, PageContent} from '@Components'
-import {GuideContextProvider} from "@Context";
+import {GuideContextProvider, StorageContextProvider} from "@Context";
 import {Route, Switch} from "react-router-dom";
 import {Home, Subscriptions} from "./pages";
-import {NotImplemented} from "./pages/NotImplemented";
 import {ThemeProvider} from "styled-components";
 import {Theme} from "@Styles";
+import {Channel} from "./pages/Channel";
+import {NotImplemented} from "./pages/NotImplemented";
 import {Watch} from "./pages/Watch";
 import {Search} from "./pages/Search";
-import {Channel} from "./pages/Channel";
-import {WatchLaterContextProvider} from "./context/WatchLaterContext";
 
 function App() {
   return (
     <>
       <ThemeProvider theme={Theme.light}>
         <GuideContextProvider>
-          <WatchLaterContextProvider>
+          <StorageContextProvider>
             <Header/>
             <Guide/>
             <MiniGuide/>
@@ -41,7 +40,7 @@ function App() {
                 </Route>
               </Switch>
             </PageContent>
-          </WatchLaterContextProvider>
+          </StorageContextProvider>
         </GuideContextProvider>
       </ThemeProvider>
     </>

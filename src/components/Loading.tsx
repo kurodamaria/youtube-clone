@@ -10,9 +10,10 @@ export function Loading() {
 }
 
 const LoadingContainer = styled.div`
-  width: 100%;
-  height: 100%;
+  height: 6rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  align-self: center;
+  justify-self: center;
 `

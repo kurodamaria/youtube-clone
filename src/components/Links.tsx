@@ -7,8 +7,17 @@ export const FlexContainerLink = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: stretch;
+  &:link {
+    color: hsl(0, 0%, 0%);
+  }
+  &:visited {
+    color: hsl(0, 0%, 0%);
+  }
   &:hover {
     background-color: transparent;
+  }
+  &:active {
+    color: hsl(0, 0%, 0%);
   }
 `
 

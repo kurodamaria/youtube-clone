@@ -12,7 +12,7 @@ import {Fetch} from "./Fetch";
 import {VideoCardContext} from "../context/VideoCardContext";
 import {TransparentLink} from "./TransparentLink";
 import {NormalLink} from "./Links";
-import {WatchLaterContext} from "../context/WatchLaterContext";
+import {StorageContext} from "@Context";
 
 export function VideoCard(): JSX.Element {
   const videoCardContext = useContext(VideoCardContext)
@@ -36,7 +36,7 @@ export function VideoCard(): JSX.Element {
 }
 
 function MoreVertOverlay() {
-  const watchLaterContext = useContext(WatchLaterContext)
+  const {watchLaterStorage} = useContext(StorageContext)
   const videoCardContext = useContext(VideoCardContext)
   return (
     <Overlay left='' bottom='' top='0.3em' right='0'>
@@ -59,12 +59,12 @@ function MoreVertOverlay() {
           <Menu>
             <NavSection>
               <MenuItem Icon={MdWatchLater}
-                        title={watchLaterContext.list.includes(videoCardContext.videoId) ? 'Remove from watch later' : 'Add to watch later'}
+                        title={watchLaterStorage.has(videoCardContext.videoId) ? 'Remove from watch later' : 'Add to watch later'}
                         onClick={() => {
-                          if (watchLaterContext.list.includes(videoCardContext.videoId)) {
-                            watchLaterContext.setList(watchLaterContext.list.filter(vid => vid !== videoCardContext.videoId))
+                          if (watchLaterStorage.has(videoCardContext.videoId)) {
+                            watchLaterStorage.remove(videoCardContext.videoId)
                           } else {
-                            watchLaterContext.setList([...watchLaterContext.list, videoCardContext.videoId])
+                            watchLaterStorage.add(videoCardContext.videoId)
                           }
                         }}/>
               <MenuItem Icon={MdPlaylistAdd} title='Save to playlist'/>

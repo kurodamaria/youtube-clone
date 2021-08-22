@@ -19,17 +19,13 @@ type PageContentContainerPropsT = {
   marginLeft: string;
 }
 const PageContentContainer = styled.div<PageContentContainerPropsT>`
-  position: fixed;
-  top: var(--header-height);
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: auto;
+  position: relative;
+  margin-top: var(--header-height);
   @media (min-width: 808px) {
-    left: var(--mini-guide-width);
+    margin-left: var(--mini-guide-width);
   }
   @media (min-width: 1329px) {
-    left: var(--guide-width);
-    left: ${props => props.marginLeft};
+    margin-left: var(--guide-width);
+    margin-left: ${props => props.marginLeft};
   }
 `

@@ -3,7 +3,7 @@ import {IconButton} from "./IconButton";
 import {IoMdTrash, MdWatchLater} from "react-icons/all";
 import {IconContext} from "react-icons";
 import {useContext} from "react";
-import {WatchLaterContext} from "../context/WatchLaterContext";
+import {StorageContext} from "@Context";
 
 function Empty() {
   return <>
@@ -23,19 +23,18 @@ function Empty() {
 }
 
 function WatchLaters() {
-  const {list} = useContext(WatchLaterContext)
+  const {watchLaterStorage} = useContext(StorageContext)
   return (
     <div>
       {
-        list.map(vid => <div>{vid}</div>)
+        watchLaterStorage.get.map(vid => <div>{vid}</div>)
       }
     </div>
   )
 }
 
 export function WatchLater() {
-  const {list} = useContext(WatchLaterContext)
-  console.log(list)
+  const {watchLaterStorage} = useContext(StorageContext)
   return (
     <Container>
       <Header>
@@ -45,7 +44,7 @@ export function WatchLater() {
       <hr/>
       <Body>
         {
-          list.length === 0
+          watchLaterStorage.get.length === 0
             ? <Empty/>
             : <WatchLaters/>
         }
