@@ -3,6 +3,9 @@ import styled from "styled-components";
 import {SubscribeButton} from "../components/SubscribeButton";
 import {FlexContainerLink} from "../components/Links";
 import {Fetch} from "../components/Fetch";
+import {useContext} from "react";
+import {StorageContext} from "@Context";
+import {category, paramReducer} from "@Helpers";
 
 function SubscriptionItemsRender({data}: { data: any }) {
   return (
@@ -34,11 +37,16 @@ function SubscriptionItemsRender({data}: { data: any }) {
 
 export function Subscriptions(): JSX.Element {
   useDocumentTitle('Subscriptions')
+  const [subs] = useContext(StorageContext).subsStorage
   return (
     <Container>
-      <Fetch
-        uri={`https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id=UC-nhyMMGNXQQsXrdtDx3mSg&id=UC5-dqG9RA0Y3twFkCDSb3VA&id=UCdBK94H6oZT2Q7l0-b0xmMg&key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA`}
-        Render={SubscriptionItemsRender}/>
+      {
+        subs.length === 0
+          ? <h1>No Subs</h1>
+          : <Fetch
+            uri={category('channels') + paramReducer('id', subs) + paramReducer('part', ['snippet', 'statistics'])}
+            Render={SubscriptionItemsRender}/>
+      }
     </Container>
   )
 }

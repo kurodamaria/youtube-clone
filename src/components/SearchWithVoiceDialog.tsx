@@ -2,22 +2,21 @@ import styled from "styled-components";
 import {MdClose, MdKeyboardVoice} from "react-icons/all";
 import {IconButton} from "./IconButton";
 import {useCheckPermission} from "../hooks/useCheckPermission";
-import {ModalBlock} from "./ModalBlock";
+import {Desc} from "./Desc";
 import {useContext} from "react";
-import {VoiceSearchContext} from "@Context";
+import {ModalDialogContext} from "@Context";
 
 export function SearchWithVoiceDialog(): JSX.Element {
   const status = useCheckPermission('microphone')
-  const {showVoiceSearch, setShowVoiceSearch} = useContext(VoiceSearchContext)
+  const setShowVoiceSearchDialog = useContext(ModalDialogContext).dialogs[0][1]
   return (
-    <>
-      <Container show={showVoiceSearch}>
-        {status === 'granted' ? <Listening/> : <NoPermission/>}
-        <VoiceIconButton status={status === 'granted' ? 'listening' : 'idle'}/>
-        <CloseIconButton onClick={() => {setShowVoiceSearch(false)}}/>
-      </Container>
-      <ModalBlock show={showVoiceSearch} onClick={() => {setShowVoiceSearch(false)}} />
-    </>
+    <Container>
+      {status === 'granted' ? <Listening/> : <NoPermission/>}
+      <VoiceIconButton status={status === 'granted' ? 'listening' : 'idle'}/>
+      <CloseIconButton onClick={() => {
+        setShowVoiceSearchDialog(false)
+      }}/>
+    </Container>
   )
 }
 
@@ -28,6 +27,7 @@ function NoPermission(): JSX.Element {
       <p>
         To search by voice, go to your browser settings and
         allow access to microphone.
+        <Desc>Note this is just an UI</Desc>
       </p>
     </>
   )
@@ -41,20 +41,14 @@ function Listening(): JSX.Element {
   )
 }
 
-type ContainerPropsT = {
-  show: boolean;
-}
-
-const Container = styled.div<ContainerPropsT>`
-  position: fixed;
-  z-index: var(--search-with-voice-z-index);
-  left: 15%;
-  right: 15%;
-  top: 1em;
+const Container = styled.div`
+  box-shadow: 0px 0px 3px 1px hsla(0, 0%, 0%, 0.5);
   height: 400px;
-  display: ${props => props.show ? 'block' : 'none'};
+  width: 80vw;
   padding: 1rem 2rem;
   background-color: hsl(0, 0%, 100%);
+  margin: 10vh auto;
+  position: relative;
 `
 
 const CloseIconButton = styled(IconButton).attrs({iconSize: '1.5rem', Icon: MdClose})`

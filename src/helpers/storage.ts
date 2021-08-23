@@ -2,10 +2,6 @@
 // Note the UI won't react to these operations
 // see hooks
 
-export const SUBSCRIPTION_KEY = 'subscriptions'
-export const WATCH_LATER_KEY = 'watch_later'
-export const HISTORY_KEY = 'history'
-
 export declare type KeyT = 'subscriptions' | 'watch_later' | 'history';
 
 export function has(key: KeyT , id: string): boolean {

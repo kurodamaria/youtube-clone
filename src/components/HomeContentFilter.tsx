@@ -79,8 +79,8 @@ export function HomeContentFilter() {
 
 const Container = styled.div`
   position: sticky;
-  z-index: 2;
-  top: 0;
+  z-index: var(--home-content-filter-z-index);
+  top: var(--header-height);
   left: 0;
   right: 0;
   height: var(--home-content-filter-height);

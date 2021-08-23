@@ -10,4 +10,5 @@ export * from './NavSection'
 export * from './WatchLater'
 export * from './SearchWithVoiceDialog'
 export * from './HomeContent'
-export {TransparentLink} from "./TransparentLink";
+export * from "./TransparentLink";
+export * from "./VideoCardGridContainer";

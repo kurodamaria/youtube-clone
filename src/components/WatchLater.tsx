@@ -4,6 +4,8 @@ import {IoMdTrash, MdWatchLater} from "react-icons/all";
 import {IconContext} from "react-icons";
 import {useContext} from "react";
 import {StorageContext} from "@Context";
+import {Fetch} from "./Fetch";
+import {category, MapToVideoCards, paramReducer} from "@Helpers";
 
 function Empty() {
   return <>
@@ -22,36 +24,42 @@ function Empty() {
   </>;
 }
 
-function WatchLaters() {
-  const {watchLaterStorage} = useContext(StorageContext)
-  return (
-    <div>
-      {
-        watchLaterStorage.get.map(vid => <div>{vid}</div>)
-      }
-    </div>
-  )
-}
-
 export function WatchLater() {
-  const {watchLaterStorage} = useContext(StorageContext)
+  const [watchLater, , , clearWatchLater] = useContext(StorageContext).watchLaterStorage
   return (
     <Container>
       <Header>
         <span>Videos to watch</span>
-        <DeleteAllIcon/>
+        <DeleteAllIcon onClick={() => {
+          clearWatchLater()
+        }}/>
       </Header>
       <hr/>
       <Body>
         {
-          watchLaterStorage.get.length === 0
+          watchLater.length === 0
             ? <Empty/>
-            : <WatchLaters/>
+            : <VerticalVideoCardContainer>
+              <Fetch uri={category('videos') + paramReducer('id', watchLater) + paramReducer('part', ['snippet'])}
+                     Render={MapToVideoCards}/>
+            </VerticalVideoCardContainer>
         }
       </Body>
     </Container>
   )
 }
+
+const VerticalVideoCardContainer = styled.div`
+  width: 406px;
+  display: flex;
+  flex-direction: column;
+  padding: 2em 3em 5em 3em;
+  overflow-y: auto;
+
+  & > * + * {
+    margin-top: 2em;
+  }
+`
 
 const Container = styled.div`
   position: fixed;
@@ -85,6 +93,7 @@ const Body = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+  overflow-y: auto;
 
   & > strong {
     width: 280px;

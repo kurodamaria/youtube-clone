@@ -1,13 +1,8 @@
 import {Guide, Header, MiniGuide, PageContent} from '@Components'
-import {GuideContextProvider, StorageContextProvider} from "@Context";
-import {Route, Switch} from "react-router-dom";
-import {Home, Subscriptions} from "./pages";
+import {GuideContextProvider, ModalDialogProvider, StorageContextProvider} from "@Context";
 import {ThemeProvider} from "styled-components";
 import {Theme} from "@Styles";
-import {Channel} from "./pages/Channel";
-import {NotImplemented} from "./pages/NotImplemented";
-import {Watch} from "./pages/Watch";
-import {Search} from "./pages/Search";
+import {Router} from "./Router";
 
 function App() {
   return (
@@ -15,31 +10,14 @@ function App() {
       <ThemeProvider theme={Theme.light}>
         <GuideContextProvider>
           <StorageContextProvider>
-            <Header/>
-            <Guide/>
-            <MiniGuide/>
-            <PageContent>
-              <Switch>
-                <Route path='/not-implemented'>
-                  <NotImplemented/>
-                </Route>
-                <Route path='/subscriptions'>
-                  <Subscriptions/>
-                </Route>
-                <Route path='/watch/:id'>
-                  <Watch/>
-                </Route>
-                <Route path='/search/:query'>
-                  <Search/>
-                </Route>
-                <Route path='/channel/:channelId'>
-                  <Channel/>
-                </Route>
-                <Route path='/'>
-                  <Home/>
-                </Route>
-              </Switch>
-            </PageContent>
+            <ModalDialogProvider>
+              <Header/>
+              <Guide/>
+              <MiniGuide/>
+              <PageContent>
+                <Router/>
+              </PageContent>
+            </ModalDialogProvider>
           </StorageContextProvider>
         </GuideContextProvider>
       </ThemeProvider>

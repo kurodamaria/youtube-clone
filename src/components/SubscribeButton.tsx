@@ -9,18 +9,18 @@ type PropsT = {
 }
 
 function _SubscribeButton(props: PropsT) {
-  const {subsStorage} = useContext(StorageContext)
+  const [subs, add, remove] = useContext(StorageContext).subsStorage
   return (
     <>
       {
-        subsStorage.has(props.channelId)
+        subs.includes(props.channelId)
           ? <UnsubscribeButton className={props.className} style={props.style} onClick={() => {
-            subsStorage.remove(props.channelId)
+            remove(props.channelId)
             console.log('unsubscribed', props.channelId)
           }}
           >subscribed</UnsubscribeButton>
           : <SubscribeChannelButton className={props.className} style={props.style} onClick={() => {
-            subsStorage.add(props.channelId)
+            add(props.channelId)
             console.log('subscribed', props.channelId)
           }}>subscribe</SubscribeChannelButton>
       }

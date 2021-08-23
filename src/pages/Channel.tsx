@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {SubscribeButton} from "../components/SubscribeButton";
 import {Loading} from "../components/Loading";
 import {Fetch} from "../components/Fetch";
+import {category, paramReducer} from "@Helpers";
 
 type PageParamsT = {
   channelId: string;
@@ -13,7 +14,7 @@ export function Channel() {
   return (
     <Container>
       <Fetch
-        uri={`https://youtube.googleapis.com/youtube/v3/channels?id=${channelId}&part=snippet,brandingSettings&key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA`}
+        uri={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet', 'brandingSettings'])}
         Render={ChannelHeadRender}
       />
       <Loading/>

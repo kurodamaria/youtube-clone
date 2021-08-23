@@ -3,6 +3,7 @@ import {createGlobalStyle} from "styled-components";
 export const GlobalStyle = createGlobalStyle`
   :root {
     box-sizing: border-box;
+    /* dimensions */
     --header-height: 56px;
     --header-font-size: 1.5rem;
     --header-center-max-width: 728px;
@@ -14,12 +15,15 @@ export const GlobalStyle = createGlobalStyle`
     
     --content-margin-top: var(---header-height);
     
-    --header-z-index: 1;
-    --mini-guide-z-index: var(--header-z-index);
-    --modal-block-z-index: calc(var(--header-z-index) + 1);
-    --guide-z-index: calc(var(--header-z-index) + 2);
-    --search-with-voice-z-index: calc(var(--header-z-index) + 3);
     --home-content-filter-height: 56px;
+    
+    /* z-index fucking hell */
+    --header-z-index: 3;
+    --mini-guide-z-index: 2;
+    --modal-block-z-index: 4;
+    --guide-z-index: 5;
+    --home-content-filter-z-index: 2; 
+    --modal-dialog-z-index: 99999;
   }
   *,
   *::before,

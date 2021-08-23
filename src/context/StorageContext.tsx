@@ -1,6 +1,5 @@
 import React, {createContext} from "react";
 import {useStorage} from "@Hooks";
-import {HISTORY_KEY, SUBSCRIPTION_KEY, WATCH_LATER_KEY} from "@Helpers";
 
 type StorageT = ReturnType<typeof useStorage>
 type StorageContextT = {
@@ -16,9 +15,10 @@ type PropsT = {
 }
 
 export function StorageContextProvider(props: PropsT) {
-  const subsStorage = useStorage(SUBSCRIPTION_KEY)
-  const watchLaterStorage = useStorage(WATCH_LATER_KEY)
-  const historyStorage = useStorage(HISTORY_KEY)
+  console.log('rendering StorageContextProvider')
+  const subsStorage = useStorage('subscriptions')
+  const watchLaterStorage = useStorage('watch_later')
+  const historyStorage = useStorage('history')
   return (
     <StorageContext.Provider value={{subsStorage, watchLaterStorage, historyStorage}}>
       {props.children}

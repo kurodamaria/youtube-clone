@@ -15,12 +15,11 @@ import {
 import {useClickOutside} from "@Hooks";
 import {checkMedia} from "@Helpers";
 import {YoutubeBrandSvg} from "./YoutubeBrandSvg";
-import {GuideContext, VoiceSearchContext, VoiceSearchContextProvider} from "@Context";
+import {GuideContext, ModalDialogContext} from "@Context";
 import {Dropdown} from "./Dropdown";
 import {Menu, MenuItem} from "./Menu";
 import {NavSection} from "./NavSection";
 import {Link} from "react-router-dom";
-import {SearchWithVoiceDialog} from "./SearchWithVoiceDialog";
 import {WatchLater} from "./WatchLater";
 import {UserCenter} from "./UserCenter";
 import {IconContext} from "react-icons";
@@ -39,9 +38,7 @@ export function Header() {
     <HeaderContext.Provider value={{showInput, setShowInput}}>
       <Container>
         <HeaderStart/>
-        <VoiceSearchContextProvider>
-          <HeaderCenter/>
-        </VoiceSearchContextProvider>
+        <HeaderCenter/>
         <HeaderEnd/>
       </Container>
     </HeaderContext.Provider>
@@ -225,7 +222,7 @@ const HeaderStartBrandLink = styled(Link)`
 
 function HeaderCenter() {
   const {showInput, setShowInput} = useContext(HeaderContext)
-  const {setShowVoiceSearch} = useContext(VoiceSearchContext)
+  const setShowSearchWithVoiceDialog = useContext(ModalDialogContext).dialogs[0][1]
   const ref = useRef<HTMLDivElement>(null)
   const clickOutsideHandle = useCallback(() => {
     setShowInput(false)
@@ -241,9 +238,8 @@ function HeaderCenter() {
         setShowInput(true)
       }}/>
       <HeaderIconButton Icon={MdKeyboardVoice} onClick={() => {
-        setShowVoiceSearch(true)
+        setShowSearchWithVoiceDialog(true)
       }}/>
-      <SearchWithVoiceDialog/>
     </HeaderCenterContainer>
   )
 }

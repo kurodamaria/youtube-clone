@@ -1,7 +1,7 @@
 import {useParams} from "react-router-dom";
 import {Fetch} from "../components/Fetch";
-import {MapToVideoCards} from "../helpers/MapToVideoCards";
-import {HomeContentContainer} from "@Components";
+import {MapToVideoCards} from "@Helpers";
+import {VideoCardGridContainer} from "@Components";
 
 type PageParamsType = {
   query: string;
@@ -11,12 +11,12 @@ export function Search() {
   const {query} = useParams<PageParamsType>()
 
   return (
-    <HomeContentContainer>
+    <VideoCardGridContainer>
       <Fetch
         uri={`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=25&q=${query}&key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA`}
         Render={Render}
       />
-    </HomeContentContainer>
+    </VideoCardGridContainer>
   )
 }
 

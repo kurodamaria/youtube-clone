@@ -25,6 +25,7 @@ import {IconButton} from "./IconButton";
 import {useClickOutside} from "@Hooks";
 import {ThemeInfoContext} from "../context/ThemeInfoContext";
 import {UserIcon} from "./UserIcon";
+import {Desc} from "./Desc";
 
 const components = [
   UserCenterMain,
@@ -221,14 +222,6 @@ const BackIconButton = styled(IconButton).attrs({Icon: MdArrowBack, iconSize: '1
 type CSubMenuPropsT = {
   setCurrentComponent: React.Dispatch<React.SetStateAction<number>>;
 }
-const Desc = styled.div`
-  height: 40px;
-  margin-left: 1rem;
-  font-size: 0.75rem;
-  line-height: 1.5em;
-  display: flex;
-  align-items: center;
-`
 
 function SwitchAcount(props: CSubMenuPropsT) {
   return (

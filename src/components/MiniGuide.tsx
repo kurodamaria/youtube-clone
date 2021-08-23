@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {GuideContext} from "@Context";
 import {useContext} from "react";
 import {MiniGuideNavItem} from "./MiniGuideNavItem";
-import {MdHistory, MdHome, MdSubscriptions, MdWatchLater} from "react-icons/all";
+import {MdHistory, MdHome, MdSubscriptions} from "react-icons/all";
 
 export function MiniGuide(): JSX.Element {
   const {lockGuide} = useContext(GuideContext)
@@ -11,7 +11,6 @@ export function MiniGuide(): JSX.Element {
       <MiniGuideNavItem Icon={MdHome} desc={'Home'} href={'/'}/>
       <MiniGuideNavItem Icon={MdSubscriptions} desc={'Subscriptions'} href={'/subscriptions'}/>
       <MiniGuideNavItem Icon={MdHistory} desc={'History'} href={'/history'}/>
-      <MiniGuideNavItem Icon={MdWatchLater} desc={'Watch Later'} href={'/library'}/>
     </MiniGuideContainer>
   )
 }

@@ -4,7 +4,7 @@ import {GuideContext} from "@Context";
 import {useContext} from "react";
 import {NavSection, SectionTitle} from "./NavSection";
 import {GuideNavItem} from "./GuideNavItem";
-import {MdHistory, MdHome, MdSubscriptions, MdWatchLater} from "react-icons/all";
+import {MdHistory, MdHome, MdSubscriptions} from "react-icons/all";
 import {ModalBlock} from "./ModalBlock";
 
 // A Drawer contains many links to different parts of the site.
@@ -21,7 +21,6 @@ export function Guide(): JSX.Element {
             <GuideNavItem Icon={MdHome} desc='Home' href='/'/>
             <GuideNavItem Icon={MdSubscriptions} desc='Subscriptions' href='/subscriptions'/>
             <GuideNavItem Icon={MdHistory} desc='History' href='/history'/>
-            <GuideNavItem Icon={MdWatchLater} desc='Watch Later' href='/watch-later'/>
           </NavSection>
           <hr/>
           <NavSection>

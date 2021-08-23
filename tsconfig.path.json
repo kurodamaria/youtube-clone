@@ -6,7 +6,8 @@
       "@Components": ["./components"],
       "@Styles": ["./styles"],
       "@Helpers": ["./helpers"],
-      "@Context": ["./context"]
+      "@Context": ["./context"],
+      "@Pages": ["./pages"]
     }
   }
 }

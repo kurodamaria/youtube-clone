@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
 
-// Accept an query and return true when it's matched
 export function useMediaQuery(query: string): boolean {
     const [matched, setMatched] = useState(false)
 

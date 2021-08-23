@@ -1,2 +1,7 @@
 export * from './Home'
 export * from './Subscriptions'
+export * from './History'
+export * from './NotImplemented'
+export * from './Search'
+export * from './Channel'
+export * from './Watch'

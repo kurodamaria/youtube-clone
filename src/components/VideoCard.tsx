@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {UserIcon} from "./UserIcon";
 import {Overlay} from "./Overlay";
-import {AiOutlineStop, MdFlag, MdMoreVert, MdPlaylistAdd, MdWatchLater} from "react-icons/all";
+import {AiOutlineStop, MdCheck, MdFlag, MdMoreVert, MdPlaylistAdd, MdWatchLater} from "react-icons/all";
 import {IconContext, IconType} from "react-icons";
 import {IconButton} from "./IconButton";
 import React, {useContext} from "react";
@@ -13,19 +13,28 @@ import {VideoCardContext} from "../context/VideoCardContext";
 import {TransparentLink} from "./TransparentLink";
 import {NormalLink} from "./Links";
 import {StorageContext} from "@Context";
+import {category, paramReducer} from "@Helpers";
 
+// VideoCard should accept an context menu
 export function VideoCard(): JSX.Element {
   const videoCardContext = useContext(VideoCardContext)
+  const [watchLater, addToWatchLater, removeFromWatchLater] = useContext(StorageContext).watchLaterStorage
+  const isInWatchLater = watchLater.includes(videoCardContext.videoId)
   return (
     <VideoCardContainer to={`/watch/${videoCardContext.videoId}`}>
       <ThumbnailContainer>
         <Thumbnail src={videoCardContext.thumbnail}/>
         <Overlay top='5px' right='5px' bottom='' left=''>
-          <VideoCardHoverAction Icon={MdWatchLater}
-                                tip='watch later'
+          <VideoCardHoverAction Icon={isInWatchLater ? MdCheck : MdWatchLater}
+                                tip={isInWatchLater ? 'remove from watch later' : 'add to watch later'}
                                 onClick={(ev) => {
                                   ev.preventDefault()
                                   ev.stopPropagation()
+                                  if (isInWatchLater) {
+                                    removeFromWatchLater(videoCardContext.videoId)
+                                  } else {
+                                    addToWatchLater(videoCardContext.videoId)
+                                  }
                                 }}
           />
         </Overlay>
@@ -36,13 +45,11 @@ export function VideoCard(): JSX.Element {
 }
 
 function MoreVertOverlay() {
-  const {watchLaterStorage} = useContext(StorageContext)
+  const [watchLater, add, remove] = useContext(StorageContext).watchLaterStorage
   const videoCardContext = useContext(VideoCardContext)
   return (
     <Overlay left='' bottom='' top='0.3em' right='0'>
-      <Dropdown onShow={() => {
-      }} onDismiss={() => {
-      }}>
+      <Dropdown>
         <IconButton
           Icon={MdMoreVert}
           iconSize='1.5rem'
@@ -59,12 +66,12 @@ function MoreVertOverlay() {
           <Menu>
             <NavSection>
               <MenuItem Icon={MdWatchLater}
-                        title={watchLaterStorage.has(videoCardContext.videoId) ? 'Remove from watch later' : 'Add to watch later'}
+                        title={watchLater.includes(videoCardContext.videoId) ? 'Remove from watch later' : 'Add to watch later'}
                         onClick={() => {
-                          if (watchLaterStorage.has(videoCardContext.videoId)) {
-                            watchLaterStorage.remove(videoCardContext.videoId)
+                          if (watchLater.includes(videoCardContext.videoId)) {
+                            remove(videoCardContext.videoId)
                           } else {
-                            watchLaterStorage.add(videoCardContext.videoId)
+                            add(videoCardContext.videoId)
                           }
                         }}/>
               <MenuItem Icon={MdPlaylistAdd} title='Save to playlist'/>
@@ -197,7 +204,7 @@ function Details(): JSX.Element {
     <DetailsContainer>
       {
         <Fetch
-          uri={`https://youtube.googleapis.com/youtube/v3/channels?part=snippet&id=${channelId}&key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA`}
+          uri={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet'])}
           Render={UserIconRender}
         />
       }
