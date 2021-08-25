@@ -8,6 +8,7 @@ type DropdownMenuPropsT = {
   children: [React.ReactNode, React.ReactNode];
   onShow?: () => void;
   onDismiss?: () => void;
+  zIndex?: number;
 }
 
 export function Dropdown(props: DropdownMenuPropsT): JSX.Element {
@@ -47,7 +48,7 @@ export function Dropdown(props: DropdownMenuPropsT): JSX.Element {
       }}>
         {props.children[0]}
       </DropdownMenuToggleContainer>
-      <DropdownMenuBodyContainer ref={bodyRef} show={show} direction={direction}>
+      <DropdownMenuBodyContainer ref={bodyRef} show={show} direction={direction} zIndex={props.zIndex}>
         {props.children[1]}
       </DropdownMenuBodyContainer>
     </DropdownMenuContainer>
@@ -64,11 +65,13 @@ const DropdownMenuToggleContainer = styled.div`
 
 type DropdownMenuBodyContainerPropsT = {
   show: boolean;
-  direction: 'left' | 'right'
+  direction: 'left' | 'right';
+  zIndex?: number;
 }
 
 const DropdownMenuBodyContainer = styled.div<DropdownMenuBodyContainerPropsT>`
   position: absolute;
+  z-index: ${props => props.zIndex};
   ${
           props => props.direction === 'left'
                   ? css`right: 0;`

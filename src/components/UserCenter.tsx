@@ -60,9 +60,7 @@ function UserCenterMain({setCurrentComponent}: UserCenterMainPropsT) {
     <>
       <Header>
         <HeaderLeft>
-          <UserIcon>
-            <img src='/shirai.jpg' alt='usericon'/>
-          </UserIcon>
+          <UserIcon src='/shirai.jpg' radius='40px'/>
         </HeaderLeft>
         <HeaderRight>
           <div>マリア黒田</div>

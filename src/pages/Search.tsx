@@ -1,6 +1,5 @@
 import {useParams} from "react-router-dom";
-import {Fetch} from "../components/Fetch";
-import {MapToVideoCards} from "@Helpers";
+import {category, MapToVideoCards, paramReducer} from "@Helpers";
 import {VideoCardGridContainer} from "@Components";
 
 type PageParamsType = {
@@ -12,17 +11,8 @@ export function Search() {
 
   return (
     <VideoCardGridContainer>
-      <Fetch
-        uri={`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=25&q=${query}&key=AIzaSyBUhZ2UBHtNmslXzTUBbLbzvRAjMPfiEjA`}
-        Render={Render}
-      />
+      <MapToVideoCards
+        url={category('search') + paramReducer('q', [query]) + paramReducer('maxResults', ['25']) + paramReducer('part', ['snippet', 'statistics', 'contentDetails'])}/>
     </VideoCardGridContainer>
-  )
-}
-
-function Render({data}: { data: any }) {
-  console.log(typeof data, data)
-  return (
-    <MapToVideoCards data={data}/>
   )
 }

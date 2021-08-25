@@ -13,31 +13,28 @@ export function Channel() {
   const {channelId} = useParams<PageParamsT>()
   return (
     <Container>
-      <Fetch
-        uri={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet', 'brandingSettings'])}
-        Render={ChannelHeadRender}
-      />
+      <Fetch url={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet', 'brandingSettings'])}>
+        {
+          (data: any) => (
+            <>
+              <ChannelBanner>
+                <img
+                  src={data.items[0].brandingSettings.image.bannerExternalUrl + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj'}
+                  alt={"channel_banner"}/>
+              </ChannelBanner>
+              <ChannelHeading>
+                <ChannelProfile>
+                  <ChannelThumbnail src={data.items[0].snippet.thumbnails.medium.url} alt={"channel_profile"}/>
+                  <ChannelName>{data.items[0].snippet.title}</ChannelName>
+                </ChannelProfile>
+                <SubscribeButton channelId={data.items[0].id}/>
+              </ChannelHeading>
+            </>
+          )
+        }
+      </Fetch>
       <Loading/>
     </Container>
-  )
-}
-
-function ChannelHeadRender({data}: { data: any }) {
-  return (
-    <>
-      <ChannelBanner>
-        <img
-          src={data.items[0].brandingSettings.image.bannerExternalUrl + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj'}
-          alt={"channel_banner"}/>
-      </ChannelBanner>
-      <ChannelHeading>
-        <ChannelProfile>
-          <ChannelThumbnail src={data.items[0].snippet.thumbnails.medium.url} alt={"channel_profile"}/>
-          <ChannelName>{data.items[0].snippet.title}</ChannelName>
-        </ChannelProfile>
-        <SubscribeButton channelId={data.items[0].id}/>
-      </ChannelHeading>
-    </>
   )
 }
 

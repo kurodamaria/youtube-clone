@@ -1,24 +1,33 @@
 import {VideoCardContext} from "../context/VideoCardContext";
 import {VideoCard} from "../components/VideoCard";
+import {Fetch} from "../components/Fetch";
 
-export function MapToVideoCards({data}: { data: any }) {
+type MapToVideoCardsPropsT = {
+  url: string;
+}
+export function MapToVideoCards(props: MapToVideoCardsPropsT) {
   return (
-    <>
+    <Fetch url={props.url}>
       {
-        data.items.map(({snippet, id}: { snippet: any, id: any }) =>
+        (data: any) =>
+        data.items.map(({snippet, id, statistics, contentDetails}: { snippet: any, id: any, statistics: any, contentDetails: any }) =>
           <VideoCardContext.Provider value={
             {
               thumbnail: snippet.thumbnails.medium.url,
               title: snippet.title,
-              channelTitle: snippet.channelTitle,
+              description: snippet.description,
               channelId: snippet.channelId,
-              videoId: id.videoId
+              videoId: id.videoId,
+              viewCount: statistics?.viewCount ?? 'unknown',
+              likeCount: statistics?.likeCount ?? 'unknown',
+              dislikeCount: statistics?.dislikeCount ?? 'unknown',
+              duration: contentDetails?.duration ?? 'unknown'
             }}
           >
             <VideoCard/>
           </VideoCardContext.Provider>
         )
       }
-    </>
+    </Fetch>
   )
 }

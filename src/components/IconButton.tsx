@@ -39,7 +39,11 @@ const IconButtonCore = (
   )
 }
 
-export const IconButton = styled(IconButtonCore)`
+type StyledIconButtonPropsT = {
+  margin?: string;
+  padding?: string;
+}
+export const IconButton = styled(IconButtonCore)<StyledIconButtonPropsT>`
   ${ClickableCss};
 
   display: flex;
@@ -49,6 +53,9 @@ export const IconButton = styled(IconButtonCore)`
   padding: 0 0;
   border-radius: 50%;
   cursor: pointer;
+  
+  padding: ${props => props.padding};
+  margin: ${props => props.margin};
 
   &:active {
 

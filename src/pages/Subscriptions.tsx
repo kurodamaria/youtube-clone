@@ -7,34 +7,6 @@ import {useContext} from "react";
 import {StorageContext} from "@Context";
 import {category, paramReducer} from "@Helpers";
 
-function SubscriptionItemsRender({data}: { data: any }) {
-  return (
-    <>
-      {
-        data.items.map(({id, snippet, statistics}: { id: any, snippet: any, statistics: any }, i: number) => (
-          <SubscriptionItem>
-            <Profile src={snippet.thumbnails.medium.url}/>
-            <FlexContainerLink to={"/channel/" + id}>
-              <Meta>
-                <Name>
-                  {snippet.title}
-                </Name>
-                <Statistics>
-                  {statistics.viewCount} subscribers • {statistics.videoCount} videos
-                </Statistics>
-                <Description title={snippet.description}>
-                  {snippet.description}
-                </Description>
-              </Meta>
-            </FlexContainerLink>
-            <SubscribeButton channelId={id}/>
-          </SubscriptionItem>
-        ))
-      }
-    </>
-  )
-}
-
 export function Subscriptions(): JSX.Element {
   useDocumentTitle('Subscriptions')
   const [subs] = useContext(StorageContext).subsStorage
@@ -43,9 +15,30 @@ export function Subscriptions(): JSX.Element {
       {
         subs.length === 0
           ? <h1>No Subs</h1>
-          : <Fetch
-            uri={category('channels') + paramReducer('id', subs) + paramReducer('part', ['snippet', 'statistics'])}
-            Render={SubscriptionItemsRender}/>
+          : <Fetch url={category('channels') + paramReducer('id', subs) + paramReducer('part', ['snippet', 'statistics'])}>
+            {
+              (data: any) =>
+              data.items.map(({id, snippet, statistics}: { id: any, snippet: any, statistics: any }, i: number) => (
+                <SubscriptionItem>
+                  <Profile src={snippet.thumbnails.medium.url}/>
+                  <FlexContainerLink to={"/channel/" + id}>
+                    <Meta>
+                      <Name>
+                        {snippet.title}
+                      </Name>
+                      <Statistics>
+                        {statistics.viewCount} subscribers • {statistics.videoCount} videos
+                      </Statistics>
+                      <Description title={snippet.description}>
+                        {snippet.description}
+                      </Description>
+                    </Meta>
+                  </FlexContainerLink>
+                  <SubscribeButton channelId={id}/>
+                </SubscriptionItem>
+              ))
+            }
+          </Fetch>
       }
     </Container>
   )

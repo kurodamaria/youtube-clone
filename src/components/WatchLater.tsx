@@ -4,7 +4,6 @@ import {IoMdTrash, MdWatchLater} from "react-icons/all";
 import {IconContext} from "react-icons";
 import {useContext} from "react";
 import {StorageContext} from "@Context";
-import {Fetch} from "./Fetch";
 import {category, MapToVideoCards, paramReducer} from "@Helpers";
 
 function Empty() {
@@ -40,8 +39,8 @@ export function WatchLater() {
           watchLater.length === 0
             ? <Empty/>
             : <VerticalVideoCardContainer>
-              <Fetch uri={category('videos') + paramReducer('id', watchLater) + paramReducer('part', ['snippet'])}
-                     Render={MapToVideoCards}/>
+              <MapToVideoCards
+                url={category('videos') + paramReducer('id', watchLater) + paramReducer('part', ['snippet', 'statistics', 'contentDetails'])}/>
             </VerticalVideoCardContainer>
         }
       </Body>

@@ -1,131 +1,109 @@
 import styled from "styled-components";
 import {UserIcon} from "./UserIcon";
 import {Overlay} from "./Overlay";
-import {AiOutlineStop, MdCheck, MdFlag, MdMoreVert, MdPlaylistAdd, MdWatchLater} from "react-icons/all";
+import {MdMoreVert, MdWatchLater} from "react-icons/all";
 import {IconContext, IconType} from "react-icons";
 import {IconButton} from "./IconButton";
-import React, {useContext} from "react";
+import React, {createContext, useContext, useState} from "react";
 import {Dropdown} from "./Dropdown";
-import {Menu, MenuItem} from "./Menu";
-import {NavSection} from "./NavSection";
-import {Fetch} from "./Fetch";
-import {VideoCardContext} from "../context/VideoCardContext";
 import {TransparentLink} from "./TransparentLink";
 import {NormalLink} from "./Links";
-import {StorageContext} from "@Context";
+import {ControlledClickable, DisableClickableEffect} from "./ControlledClickable";
+import {ControlledOverlayContainer} from "./OverlayContainer";
+import {PreventDefaultOnClick} from "./PreventDefaultOnClick";
+import {PaddingMargin} from "./PaddingMargin";
+import {VideoCardContext} from "../context/VideoCardContext";
+import {Fetch} from "./Fetch";
 import {category, paramReducer} from "@Helpers";
 
-// VideoCard should accept an context menu
 export function VideoCard(): JSX.Element {
-  const videoCardContext = useContext(VideoCardContext)
-  const [watchLater, addToWatchLater, removeFromWatchLater] = useContext(StorageContext).watchLaterStorage
-  const isInWatchLater = watchLater.includes(videoCardContext.videoId)
+  const [hoveringMaster, setHoveringMaster] = useState(false)
+  const [dropdownShowing, setDropdownShowing] = useState(false)
+  const {videoId} = useContext(VideoCardContext)
   return (
-    <VideoCardContainer to={`/watch/${videoCardContext.videoId}`}>
-      <ThumbnailContainer>
-        <Thumbnail src={videoCardContext.thumbnail}/>
-        <Overlay top='5px' right='5px' bottom='' left=''>
-          <VideoCardHoverAction Icon={isInWatchLater ? MdCheck : MdWatchLater}
-                                tip={isInWatchLater ? 'remove from watch later' : 'add to watch later'}
-                                onClick={(ev) => {
-                                  ev.preventDefault()
-                                  ev.stopPropagation()
-                                  if (isInWatchLater) {
-                                    removeFromWatchLater(videoCardContext.videoId)
-                                  } else {
-                                    addToWatchLater(videoCardContext.videoId)
-                                  }
-                                }}
-          />
-        </Overlay>
-      </ThumbnailContainer>
-      <Details/>
-    </VideoCardContainer>
+    <ControlledClickable>
+      <MasterContainer onMouseEnter={() => {
+        setHoveringMaster(true)
+      }}
+                       onMouseLeave={() => {
+                         setHoveringMaster(false)
+                       }
+                       }>
+        <LinkLayer to={`/watch/${videoId}`}>
+          <ContentContainer>
+            <ControlledOverlayContainer show={hoveringMaster}>
+              <ThumbnailPart/>
+              <Overlay top='5px' bottom='' left='' right='5px'>
+                <DisableClickableEffect>
+                  <PreventDefaultOnClick>
+                    <HoverAction Icon={MdWatchLater}
+                                 tip='add to watch later'
+                    />
+                  </PreventDefaultOnClick>
+                </DisableClickableEffect>
+              </Overlay>
+            </ControlledOverlayContainer>
+            <ControlledOverlayContainer show={hoveringMaster || dropdownShowing}>
+              <DetailsPart/>
+              <Overlay left='' bottom='' top='0em' right='-0.5em'>
+                <DisableClickableEffect>
+                  <PreventDefaultOnClick>
+                    <Dropdown onShow={() => {
+                      setDropdownShowing(true)
+                    }} onDismiss={() => {
+                      setDropdownShowing(false)
+                    }} zIndex={1}>
+                      <IconButton Icon={MdMoreVert} iconSize='1.5rem' padding='0.5em 0.5em'/>
+                      <div style={{backgroundColor: 'lightblue', height: '300px', width: '300px'}}>
+                        A Dropdown Menu, this should be replaced
+                      </div>
+                    </Dropdown>
+                  </PreventDefaultOnClick>
+                </DisableClickableEffect>
+              </Overlay>
+            </ControlledOverlayContainer>
+          </ContentContainer>
+        </LinkLayer>
+      </MasterContainer>
+    </ControlledClickable>
   )
 }
 
-function MoreVertOverlay() {
-  const [watchLater, add, remove] = useContext(StorageContext).watchLaterStorage
-  const videoCardContext = useContext(VideoCardContext)
-  return (
-    <Overlay left='' bottom='' top='0.3em' right='0'>
-      <Dropdown>
-        <IconButton
-          Icon={MdMoreVert}
-          iconSize='1.5rem'
-          onMouseDown={(ev) => {
-            ev?.stopPropagation()
-          }}
-          onClick={(ev) => {
-            // prevent from redirecting
-            ev?.preventDefault()
-            ev?.stopPropagation()
-          }}
-        />
-        <IconContext.Provider value={{size: '1.5rem'}}>
-          <Menu>
-            <NavSection>
-              <MenuItem Icon={MdWatchLater}
-                        title={watchLater.includes(videoCardContext.videoId) ? 'Remove from watch later' : 'Add to watch later'}
-                        onClick={() => {
-                          if (watchLater.includes(videoCardContext.videoId)) {
-                            remove(videoCardContext.videoId)
-                          } else {
-                            add(videoCardContext.videoId)
-                          }
-                        }}/>
-              <MenuItem Icon={MdPlaylistAdd} title='Save to playlist'/>
-            </NavSection>
-            <hr/>
-            <NavSection>
-              <MenuItem Icon={AiOutlineStop} title='Not interested'/>
-              <MenuItem Icon={AiOutlineStop} title="Don't recommend channel"/>
-              <MenuItem Icon={MdFlag} title='Report'/>
-            </NavSection>
-          </Menu>
-        </IconContext.Provider>
-      </Dropdown>
-    </Overlay>
-  )
-}
-
-const ThumbnailContainer = styled.div`
+const MasterContainer = styled.div`
+  // dev props
+  // width: 300px;
+  // margin: 1em auto;
+  // border: 1px solid red;
+  // end of dev props
+  border-radius: 0.3em;
   position: relative;
 `
-const VideoCardContainer = styled(TransparentLink)`
-  cursor: pointer;
+
+const LinkLayer = styled(TransparentLink)`
+  // dev props
+  // border: 1px solid green;
+  // end of dev props
   display: flex;
   flex-direction: column;
-  padding: 0.3em 0.3em;
-  border-radius: 0.2em;
-
-  position: relative;
-
-  ${IconButton} {
-    background-color: transparent;
-  }
-
-  ${Overlay} {
-    z-index: 1;
-  }
-
-  ${Overlay}:first-of-type {
-    display: none;
-  }
-
-  &:hover ${Overlay} {
-    display: block;
-  }
-
-  ${Overlay} > * + * {
-    margin-top: 0.3em;
-  }
-
-  ${IconButton} {
-    height: 2.5rem;
-    width: 2.5rem;
-  }
+  height: 100%;
 `
+
+const ContentContainer = styled.div`
+  // dev props
+  // border: 1px solid blue;
+  // end of dev props
+  flex-grow: 1;
+  margin: 0.3em 0.3em;
+  display: flex;
+  flex-direction: column;
+`
+
+function ThumbnailPart() {
+  const {thumbnail} = useContext(VideoCardContext)
+  return (
+    <Thumbnail src={thumbnail}/>
+  )
+}
 
 const Thumbnail = styled.img`
   width: 100%;
@@ -137,92 +115,102 @@ type VideoCardHoverActionPropsT = {
   onClick?: (() => void) | ((ev: React.MouseEvent<HTMLDivElement>) => void);
 }
 
-function VideoCardHoverAction(props: VideoCardHoverActionPropsT) {
+function HoverAction(props: VideoCardHoverActionPropsT) {
   return (
-    <VideoCardHoverActionContainer onClick={props.onClick}
-                                   onMouseDown={(ev) => {
-                                     ev?.stopPropagation()
-                                     ev?.preventDefault()
-                                   }}
-    >
-      <div>
+    <HoverActionMasterContainer onClick={props.onClick}>
+      <HoverActionIconContainer>
         <IconContext.Provider value={{size: '1rem', style: {color: 'hsl(0, 0%, 100%)', verticalAlign: 'middle'}}}>
           <props.Icon/>
         </IconContext.Provider>
-      </div>
-      <span>{props.tip}</span>
-    </VideoCardHoverActionContainer>
+      </HoverActionIconContainer>
+      <HoverActionTip>{props.tip}</HoverActionTip>
+    </HoverActionMasterContainer>
   )
 }
 
-const VideoCardHoverActionContainer = styled.div`
+const HoverActionIconContainer = styled.div`
+  background-color: hsl(0, 0%, 0%);
+  width: 1.8rem;
+  height: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const HoverActionTip = styled.span`
+  user-select: none;
+  position: absolute;
+  right: 1.8rem;
+  font-size: 0.875rem;
+  line-height: 1.8rem;
+  letter-spacing: 0.1px;
+  padding: 0 0.5em;
+  white-space: nowrap;
+
+  background-color: hsl(0, 0%, 0%);
+  color: hsl(0, 0%, 100%);
+  text-transform: uppercase;
+  transform-origin: right center;
+  transform: scaleX(0);
+  transition: transform 0.2s;
+`
+
+const HoverActionMasterContainer = styled.div`
   position: relative;
   display: flex;
   cursor: pointer;
 
-  & > div {
-    background-color: hsl(0, 0%, 0%);
-    width: 1.8rem;
-    height: 1.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  & > span {
-    user-select: none;
-    position: absolute;
-    right: 1.8rem;
-    font-size: 0.875rem;
-    line-height: 1.8rem;
-    letter-spacing: 0.1px;
-    padding: 0 0.5em;
-    white-space: nowrap;
-
-    background-color: hsl(0, 0%, 0%);
-    color: hsl(0, 0%, 100%);
-    text-transform: uppercase;
-    transform-origin: right center;
-    transform: scaleX(0);
-    transition: transform 0.2s;
-  }
-
-  &:hover > span {
+  &:hover > ${HoverActionTip} {
     transition: transform 0.2s 0.5s;
     transform: scaleX(1);
   }
 `
 
-const UserIconRender = ({data}: { data: any }) =>
-  <UserIcon>
-    <img src={data.items[0].snippet.thumbnails.default.url} alt='cover'/>
-  </UserIcon>
+type ChannelContextT = {
+  channelId: string;
+  channelTitle: string;
+}
 
-function Details(): JSX.Element {
+const ChannelContext = createContext<ChannelContextT>({} as ChannelContextT)
+
+function DetailsPart(): JSX.Element {
   const {channelId} = useContext(VideoCardContext)
   return (
-    <DetailsContainer>
-      {
+    <ChannelContext.Provider value={{channelId, channelTitle: 'Shirai Kuroko Daily Life'}}>
+      <DetailsMasterContainer>
         <Fetch
-          uri={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet'])}
-          Render={UserIconRender}
-        />
-      }
-      <Meta/>
-    </DetailsContainer>
+          url={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet', 'statistics', 'brandingSettings'])}>
+          {
+            (data: any) =>
+              <PaddingMargin margin='0.75rem 0.75rem 0 0'>
+                <UserIcon radius='40px' src={data.items[0].snippet.thumbnails.default.url}/>
+              </PaddingMargin>
+          }
+        </Fetch>
+        <Meta/>
+      </DetailsMasterContainer>
+    </ChannelContext.Provider>
   )
 }
 
-const DetailsContainer = styled.div`
+const DetailsMasterContainer = styled.div`
   display: flex;
-
-  ${UserIcon} {
-    margin-top: 0.75rem;
-    margin-right: 0.75rem;
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
 `
+
+
+function Meta(): JSX.Element {
+  const {title, channelId} = useContext(VideoCardContext)
+  const {channelTitle} = useContext(ChannelContext)
+  return (
+    <MetaContainer>
+      <MetaTitle title={title}>{title}</MetaTitle>
+      <MetaChannelAndViews>
+        <NormalLink to={`/channel/${channelId}`}>{channelTitle}</NormalLink>
+        <div>27k views • 19 hours ago</div>
+      </MetaChannelAndViews>
+    </MetaContainer>
+  )
+}
 
 const MetaContainer = styled.div`
   position: relative;
@@ -236,20 +224,6 @@ const MetaContainer = styled.div`
     background-color: transparent;
   }
 `
-
-function Meta(): JSX.Element {
-  const {title, channelId, channelTitle} = useContext(VideoCardContext)
-  return (
-    <MetaContainer>
-      <MetaTitle title={title}>{title}</MetaTitle>
-      <MetaChannelAndViews>
-        <NormalLink to={`/channel/${channelId}`}>{channelTitle}</NormalLink>
-        <div>27k views•19 hours ago</div>
-      </MetaChannelAndViews>
-      <MoreVertOverlay/>
-    </MetaContainer>
-  )
-}
 
 const MetaTitle = styled.div`
   text-align: start;

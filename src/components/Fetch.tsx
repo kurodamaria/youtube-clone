@@ -1,64 +1,29 @@
-import {useEffect, useState} from "react";
 import {Loading} from "./Loading";
-import {Error} from "./Error";
+import {ErrorT, useMemoFetch} from "../hooks/useMemoFetch";
 
-type FetchPropsT = {
-  uri: string;
-  Render: ({data}: { data: Object }) => JSX.Element;
-  Loading?: () => JSX.Element;
-  Error?: ({error}: { error: Object }) => JSX.Element;
+type FetchPropsT<DataT> = {
+  url: string;
+  children: (data: DataT) => JSX.Element;
 }
 
-export function Fetch(props: FetchPropsT) {
-  const [data, setData] = useState<any>(null)
-  const [error, setError] = useState<any>(null)
-  useEffect(() => {
-    setData(null)
-    setError(null)
-    fetch(props.uri)
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          setError(data.message)
-        } else {
-          setData(data)
-        }
-      })
-      .catch(err => {
-        setError(err)
-      })
-  }, [props.uri])
+// requires ts 2.9+
+export function Fetch<DataT>(props: FetchPropsT<DataT>) {
+  const [data, error] = useMemoFetch<DataT>(props.url)
   if (data) {
-    return (
-      <props.Render data={data}/>
-    )
+    console.log('got data', data)
+    return props.children(data)
   } else if (error) {
-    if (props.Error) {
-      return (
-        <props.Error error={error}/>
-      )
-    } else {
-      return (
-        <Error>
-          <div style={{display: "flex", alignItems: 'center', justifyContent: 'space-between'}}>
-            <h2>Error!</h2>
-          </div>
-          Some error happened during fetching <a href={props.uri}>{props.uri}</a>
-          <br/>
-          <h4>Details</h4>
-          {JSON.stringify(error)}
-        </Error>
-      )
-    }
+    return <DefaultErrorRender error={error}/>
   } else {
-    if (props.Loading) {
-      return (
-        <props.Loading/>
-      )
-    } else {
-      return (
-        <Loading/>
-      )
-    }
+    return <Loading/>
   }
+}
+
+function DefaultErrorRender({error}: { error: ErrorT }) {
+  return (
+    <div>
+      <h1>Error</h1>
+      <p>{error.msg}</p>
+    </div>
+  )
 }

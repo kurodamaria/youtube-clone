@@ -2,7 +2,7 @@ import styled, {css} from "styled-components";
 import React, {createContext, useContext, useState} from "react";
 
 type ControlledClickableContextT = {
- stop: boolean;
+  stop: boolean;
 }
 
 export const ControlledClickableContext = createContext<ControlledClickableContextT>({stop: false})
@@ -16,6 +16,8 @@ const ControlledClickableWrapper = styled.div<ControlledClickableWrapperPropsT>`
   background-color 0.3s;
   box-shadow: inset 0 0 0 0 ${props => props.theme.colors.clickable.boxShadow};
   background-color: ${props => props.theme.colors.clickable.bg};
+  width: fit-content;
+  height: fit-content;
   ${
           props => props.play ? css`
             transition: none;
@@ -52,7 +54,7 @@ function _ControlledClickableContainer(props: ControlledClickableContainerPropsT
       }}
       // just in case, just in case ...
       onMouseOut={() => {
-       setIsMouseDown(false)
+        setIsMouseDown(false)
       }}
       className={props.className}
       style={props.style}
@@ -61,5 +63,21 @@ function _ControlledClickableContainer(props: ControlledClickableContainerPropsT
     </ControlledClickableWrapper>
   )
 }
+
 // yeah, eh, whatever, there is a reason for this
 export const ControlledClickable = styled(_ControlledClickableContainer)``
+
+type DisableClickableEffectPropsT = {
+  children: React.ReactNode;
+}
+
+export function DisableClickableEffect(props: DisableClickableEffectPropsT) {
+  return (
+    <div onMouseDown={(ev) => {
+      ev.stopPropagation()
+    }}
+    >
+      {props.children}
+    </div>
+  )
+}
