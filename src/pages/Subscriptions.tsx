@@ -6,6 +6,7 @@ import {Fetch} from "../components/Fetch";
 import {useContext} from "react";
 import {StorageContext} from "@Context";
 import {category, paramReducer} from "@Helpers";
+import {NoWhatever} from "../components/NoWhatever";
 
 export function Subscriptions(): JSX.Element {
   useDocumentTitle('Subscriptions')
@@ -14,7 +15,7 @@ export function Subscriptions(): JSX.Element {
     <Container>
       {
         subs.length === 0
-          ? <h1>No Subs</h1>
+          ? <NoSubs/>
           : <Fetch url={category('channels') + paramReducer('id', subs) + paramReducer('part', ['snippet', 'statistics'])}>
             {
               (data: any) =>
@@ -96,3 +97,12 @@ const Description = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 `
+
+function NoSubs() {
+  return (
+    <NoWhatever title={"No Subscriptions ?!"}
+                desc={"Add some subs, will you?"}
+                img={"https://gifimage.net/wp-content/uploads/2017/08/non-non-biyori-gif-7-1.gif"}
+    />
+  )
+}

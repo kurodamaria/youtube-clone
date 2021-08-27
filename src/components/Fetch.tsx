@@ -1,5 +1,6 @@
 import {Loading} from "./Loading";
 import {ErrorT, useMemoFetch} from "../hooks/useMemoFetch";
+import React from "react";
 
 type FetchPropsT<DataT> = {
   url: string;
@@ -7,10 +8,9 @@ type FetchPropsT<DataT> = {
 }
 
 // requires ts 2.9+
-export function Fetch<DataT>(props: FetchPropsT<DataT>) {
+function DirtyFetch<DataT>(props: FetchPropsT<DataT>) {
   const [data, error] = useMemoFetch<DataT>(props.url)
   if (data) {
-    console.log('got data', data)
     return props.children(data)
   } else if (error) {
     return <DefaultErrorRender error={error}/>
@@ -18,6 +18,8 @@ export function Fetch<DataT>(props: FetchPropsT<DataT>) {
     return <Loading/>
   }
 }
+
+export const Fetch = React.memo(DirtyFetch)
 
 function DefaultErrorRender({error}: { error: ErrorT }) {
   return (

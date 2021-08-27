@@ -17,9 +17,9 @@ export function useMemoFetch<DataT>(url: string, refresh: boolean = false): [Dat
   const [data, setData] = useState<DataT | null>(null)
   const [error, setError] = useState<ErrorT | null>(null)
 
-  free()
-
   useEffect(() => {
+    setData(null)
+    setError(null)
     if (refresh || !hasLocalCache(url)) {
       getRemote<DataT>(url)
         .then(data => setData(data))
@@ -30,21 +30,6 @@ export function useMemoFetch<DataT>(url: string, refresh: boolean = false): [Dat
   }, [refresh, url])
 
   return [data, error]
-}
-
-function free() {
-  const now = Date.now()
-  for (const key in STORE) {
-    console.log('should free', key)
-    // it's never undefined, fuck you
-    // @ts-ignore
-    if (now - STORE.get(key).date > 20000) {
-      console.log('free', key)
-      STORE.delete(key)
-    } else {
-      console.log('do not free', key)
-    }
-  }
 }
 
 function hasLocalCache(url: string): boolean {

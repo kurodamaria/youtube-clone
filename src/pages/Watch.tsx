@@ -15,6 +15,7 @@ export function Watch() {
   const [, addToHistory] = useContext(StorageContext).historyStorage
   useDocumentTitle(id)
   useEffect(() => {
+    console.log('addToHistory', id)
     addToHistory(id)
   }, [addToHistory, id])
   return (

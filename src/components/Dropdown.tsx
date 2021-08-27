@@ -9,6 +9,7 @@ type DropdownMenuPropsT = {
   onShow?: () => void;
   onDismiss?: () => void;
   zIndex?: number;
+  direction?: 'left' | 'right';
 }
 
 export function Dropdown(props: DropdownMenuPropsT): JSX.Element {
@@ -27,6 +28,10 @@ export function Dropdown(props: DropdownMenuPropsT): JSX.Element {
 
   useClickOutside(ref, clickOutsideHandle)
   useLayoutEffect(() => {
+    if (props.direction) {
+      return
+    }
+
     if (show) {
       if (bodyRef.current) {
         const rect = bodyRef.current.getBoundingClientRect()
@@ -35,7 +40,7 @@ export function Dropdown(props: DropdownMenuPropsT): JSX.Element {
         }
       }
     }
-  }, [show])
+  }, [props.direction, show])
   return (
     <DropdownMenuContainer ref={ref}>
       <DropdownMenuToggleContainer onClick={(ev) => {
@@ -48,7 +53,7 @@ export function Dropdown(props: DropdownMenuPropsT): JSX.Element {
       }}>
         {props.children[0]}
       </DropdownMenuToggleContainer>
-      <DropdownMenuBodyContainer ref={bodyRef} show={show} direction={direction} zIndex={props.zIndex}>
+      <DropdownMenuBodyContainer ref={bodyRef} show={show} direction={props.direction ?? direction} zIndex={props.zIndex}>
         {props.children[1]}
       </DropdownMenuBodyContainer>
     </DropdownMenuContainer>

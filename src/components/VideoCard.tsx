@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import {UserIcon} from "./UserIcon";
 import {Overlay} from "./Overlay";
-import {MdMoreVert, MdWatchLater} from "react-icons/all";
+import {IoMdTrash, MdMoreVert, MdWatchLater} from "react-icons/all";
 import {IconContext, IconType} from "react-icons";
 import {IconButton} from "./IconButton";
-import React, {createContext, useContext, useState} from "react";
+import React, {createContext, useCallback, useContext, useState} from "react";
 import {Dropdown} from "./Dropdown";
 import {TransparentLink} from "./TransparentLink";
 import {NormalLink} from "./Links";
@@ -15,11 +15,17 @@ import {PaddingMargin} from "./PaddingMargin";
 import {VideoCardContext} from "../context/VideoCardContext";
 import {Fetch} from "./Fetch";
 import {category, paramReducer} from "@Helpers";
+import {StorageContext} from "@Context";
 
-export function VideoCard(): JSX.Element {
+type VideoCardPropsT = {
+  Menu: () => JSX.Element;
+}
+
+export function VideoCard(props: VideoCardPropsT): JSX.Element {
   const [hoveringMaster, setHoveringMaster] = useState(false)
   const [dropdownShowing, setDropdownShowing] = useState(false)
-  const {videoId} = useContext(VideoCardContext)
+  const [watchLater, addWatchLater, removeWatchLater] = useContext(StorageContext).watchLaterStorage
+  const {videoId, thumbnail, channelId} = useContext(VideoCardContext)
   return (
     <ControlledClickable>
       <MasterContainer onMouseEnter={() => {
@@ -32,31 +38,46 @@ export function VideoCard(): JSX.Element {
         <LinkLayer to={`/watch/${videoId}`}>
           <ContentContainer>
             <ControlledOverlayContainer show={hoveringMaster}>
-              <ThumbnailPart/>
+              <ThumbnailPart thumbnail={thumbnail}/>
               <Overlay top='5px' bottom='' left='' right='5px'>
                 <DisableClickableEffect>
                   <PreventDefaultOnClick>
-                    <HoverAction Icon={MdWatchLater}
-                                 tip='add to watch later'
-                    />
+                    {
+                      watchLater.includes(videoId)
+                        ? <HoverAction tip={'remove watch later'}
+                                       Icon={IoMdTrash}
+                                       onClick={() => {
+                                         removeWatchLater(videoId)
+                                       }}
+                        />
+                        : <HoverAction tip={'add watch later'}
+                                       Icon={MdWatchLater}
+                                       onClick={() => {
+                                         addWatchLater(videoId)
+                                       }}
+                        />
+                    }
                   </PreventDefaultOnClick>
                 </DisableClickableEffect>
               </Overlay>
             </ControlledOverlayContainer>
             <ControlledOverlayContainer show={hoveringMaster || dropdownShowing}>
-              <DetailsPart/>
+              <DetailsPart channelId={channelId}/>
               <Overlay left='' bottom='' top='0em' right='-0.5em'>
                 <DisableClickableEffect>
                   <PreventDefaultOnClick>
-                    <Dropdown onShow={() => {
-                      setDropdownShowing(true)
-                    }} onDismiss={() => {
-                      setDropdownShowing(false)
-                    }} zIndex={1}>
-                      <IconButton Icon={MdMoreVert} iconSize='1.5rem' padding='0.5em 0.5em'/>
-                      <div style={{backgroundColor: 'lightblue', height: '300px', width: '300px'}}>
-                        A Dropdown Menu, this should be replaced
-                      </div>
+                    <Dropdown
+                      onShow={() => {
+                        setDropdownShowing(true)
+                      }}
+                      onDismiss={() => {
+                        setDropdownShowing(false)
+                      }}
+                      zIndex={1}
+                      direction={'left'}
+                    >
+                      <MoreVertIconButton/>
+                      <props.Menu/>
                     </Dropdown>
                   </PreventDefaultOnClick>
                 </DisableClickableEffect>
@@ -68,6 +89,10 @@ export function VideoCard(): JSX.Element {
     </ControlledClickable>
   )
 }
+
+const MoreVertIconButton = styled(IconButton).attrs({Icon: MdMoreVert, iconSize: '1.5rem', padding: '0.5em 0.5em'})`
+  background-color: transparent;
+`
 
 const MasterContainer = styled.div`
   // dev props
@@ -98,12 +123,17 @@ const ContentContainer = styled.div`
   flex-direction: column;
 `
 
-function ThumbnailPart() {
-  const {thumbnail} = useContext(VideoCardContext)
+type ThumbnailPartPropsT = {
+  thumbnail: string;
+}
+
+function _ThumbnailPart(props: ThumbnailPartPropsT) {
   return (
-    <Thumbnail src={thumbnail}/>
+    <Thumbnail src={props.thumbnail}/>
   )
 }
+
+const ThumbnailPart = React.memo(_ThumbnailPart)
 
 const Thumbnail = styled.img`
   width: 100%;
@@ -171,27 +201,38 @@ type ChannelContextT = {
   channelTitle: string;
 }
 
-const ChannelContext = createContext<ChannelContextT>({} as ChannelContextT)
+const DetailsContext = createContext({} as ChannelContextT)
 
-function DetailsPart(): JSX.Element {
-  const {channelId} = useContext(VideoCardContext)
+type DetailsPartPropsT = {
+  channelId: string;
+}
+
+function _DetailsPart(props: DetailsPartPropsT): JSX.Element {
+  const fetchUrl = category('channels') + paramReducer('id', [props.channelId]) + paramReducer('part', ['snippet', 'statistics', 'brandingSettings'])
+  console.log('_DetailsPart, fetchUrl', fetchUrl)
+  const render = useCallback((data: any) => {
+    return (
+      <>
+        <PaddingMargin margin='0.75rem 0.75rem 0 0'>
+          <UserIcon radius='40px' src={data.items[0].snippet.thumbnails.default.url}/>
+        </PaddingMargin>
+        <DetailsContext.Provider value={{channelId: data.items[0].id, channelTitle: data.items[0].snippet.title}}>
+          <Meta/>
+        </DetailsContext.Provider>
+      </>
+    )
+  }, [])
   return (
-    <ChannelContext.Provider value={{channelId, channelTitle: 'Shirai Kuroko Daily Life'}}>
-      <DetailsMasterContainer>
-        <Fetch
-          url={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet', 'statistics', 'brandingSettings'])}>
-          {
-            (data: any) =>
-              <PaddingMargin margin='0.75rem 0.75rem 0 0'>
-                <UserIcon radius='40px' src={data.items[0].snippet.thumbnails.default.url}/>
-              </PaddingMargin>
-          }
-        </Fetch>
-        <Meta/>
-      </DetailsMasterContainer>
-    </ChannelContext.Provider>
+    <DetailsMasterContainer>
+      <Fetch
+        url={fetchUrl}>
+        {render}
+      </Fetch>
+    </DetailsMasterContainer>
   )
 }
+
+const DetailsPart = React.memo(_DetailsPart)
 
 const DetailsMasterContainer = styled.div`
   display: flex;
@@ -199,14 +240,15 @@ const DetailsMasterContainer = styled.div`
 
 
 function Meta(): JSX.Element {
-  const {title, channelId} = useContext(VideoCardContext)
-  const {channelTitle} = useContext(ChannelContext)
+  const {title} = useContext(VideoCardContext)
+  const {channelTitle, channelId} = useContext(DetailsContext)
   return (
     <MetaContainer>
       <MetaTitle title={title}>{title}</MetaTitle>
       <MetaChannelAndViews>
-        <NormalLink to={`/channel/${channelId}`}>{channelTitle}</NormalLink>
-        <div>27k views • 19 hours ago</div>
+        <DisableClickableEffect>
+          <NormalLink to={`/channel/${channelId}`}>{channelTitle}</NormalLink>
+        </DisableClickableEffect>
       </MetaChannelAndViews>
     </MetaContainer>
   )

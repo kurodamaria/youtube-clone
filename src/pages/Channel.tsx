@@ -4,6 +4,7 @@ import {SubscribeButton} from "../components/SubscribeButton";
 import {Loading} from "../components/Loading";
 import {Fetch} from "../components/Fetch";
 import {category, paramReducer} from "@Helpers";
+import {useCallback} from "react";
 
 type PageParamsT = {
   channelId: string;
@@ -11,27 +12,32 @@ type PageParamsT = {
 
 export function Channel() {
   const {channelId} = useParams<PageParamsT>()
+  const render = useCallback((data: any) => {
+    return (
+      <>
+        {
+          data.items[0].brandingSettings.image &&
+          <ChannelBanner>
+            <img
+              src={data.items[0].brandingSettings.image.bannerExternalUrl + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj'}
+              alt={"channel_banner"}/>
+          </ChannelBanner>
+        }
+        <ChannelHeading>
+          <ChannelProfile>
+            <ChannelThumbnail src={data.items[0].snippet.thumbnails.medium.url} alt={"channel_profile"}/>
+            <ChannelName>{data.items[0].snippet.title}</ChannelName>
+          </ChannelProfile>
+          <SubscribeButton channelId={data.items[0].id}/>
+        </ChannelHeading>
+      </>
+    )
+  }, [])
   return (
     <Container>
-      <Fetch url={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet', 'brandingSettings'])}>
-        {
-          (data: any) => (
-            <>
-              <ChannelBanner>
-                <img
-                  src={data.items[0].brandingSettings.image.bannerExternalUrl + '=w2560-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj'}
-                  alt={"channel_banner"}/>
-              </ChannelBanner>
-              <ChannelHeading>
-                <ChannelProfile>
-                  <ChannelThumbnail src={data.items[0].snippet.thumbnails.medium.url} alt={"channel_profile"}/>
-                  <ChannelName>{data.items[0].snippet.title}</ChannelName>
-                </ChannelProfile>
-                <SubscribeButton channelId={data.items[0].id}/>
-              </ChannelHeading>
-            </>
-          )
-        }
+      <Fetch
+        url={category('channels') + paramReducer('id', [channelId]) + paramReducer('part', ['snippet', 'statistics', 'brandingSettings'])}>
+        {render}
       </Fetch>
       <Loading/>
     </Container>
